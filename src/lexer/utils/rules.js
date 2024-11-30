@@ -23,6 +23,8 @@ module.exports = [
     { regex: /^!=/, type: "DIFFERENT" },
     { regex: /^>=/, type: "GREATER_OR_EQUAL" },
     { regex: /^<=/, type: "LESS_OR_EQUAL" },
+    { regex: /^>/, type: "GREATER" },
+    { regex: /^</, type: "LESS" },
     { regex: /^\+/, type: "PLUS" },
     { regex: /^\-/, type: "MINUS" },
     { regex: /^\*/, type: "MULTIPLY" },
@@ -31,6 +33,8 @@ module.exports = [
     { regex: /^;/, type: "SEMICOLON" },
     { regex: /^\(/, type: "LPAREN" },
     { regex: /^\)/, type: "RPAREN" },
+    { regex: /^\{/, type: "LBRACE" },
+    { regex: /^\}/, type: "RBRACE" },
 
     // Whitespace (ignored)
     { regex: /^\s+/, type: "WHITESPACE" },

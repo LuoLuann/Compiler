@@ -1,5 +1,5 @@
 const Token = require('./token');
-const tokens = require('./utils/tokens');
+const tokens = require('./utils/rules');
 
 class Lexer {
     constructor(code) {
@@ -28,21 +28,19 @@ class Lexer {
             // Percorre todos os padrões de tokens
             for (let { regex, type } of this.patterns) {
                 const match = line.match(regex); // Verifica se há correspondência
-
-                
                 
                 if (match) {
                     matched = true;
 
-                    if (type === 'WHITESPACE') {
-                        line = line.slice(value.length).trim();
-                        break;
-                    }
+                    // if (type === 'WHITESPACE') {
+                    //     line = line.slice(value.length).trim();
+                    //     break;
+                    // }
                     const value = match[0];
 
-                    if (type === 'NUMBER') {
-                        console.log(`Número capturado: "${value}"`);
-                    }
+                    // if (type === 'NUMBER') {
+                    //     console.log(`Número capturado: "${value}"`);
+                    // }
 
                     const token = new Token(type, value, lineNumber);  // Cria um novo token
 
@@ -61,10 +59,10 @@ class Lexer {
             }
 
             count++
-            if (!line.trim()) {
-                console.log(`Linha vazia após ${count} iterações.`);
-                break;
-            }
+            // if (!line.trim()) {
+            //     console.log(`Linha vazia após ${count} iterações.`);
+            //     break;
+            // }
     
             console.log(`Iteração atual: ${count}`);
         }
