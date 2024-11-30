@@ -1,0 +1,52 @@
+[
+  {
+    "type": "VARIABLE",
+    "value": "var",
+    "line": 1
+  },
+  {
+    "type": "IDENTIFIER",
+    "value": "num",
+    "line": 1
+  },
+  {
+    "type": "ASSIGN",
+    "value": "=",
+    "line": 1
+  },
+  {
+    "type": "NUMBER",
+    "value": "5",
+    "line": 1
+  },
+  {
+    "type": "SEMICOLON",
+    "value": ";",
+    "line": 1
+  },
+  {
+    "type": "PRINT",
+    "value": "print",
+    "line": 2
+  },
+  {
+    "type": "LPAREN",
+    "value": "(",
+    "line": 2
+  },
+  {
+    "type": "IDENTIFIER",
+    "value": "num",
+    "line": 2
+  },
+  {
+    "type": "RPAREN",
+    "value": ")",
+    "line": 2
+  },
+  {
+    "type": "SEMICOLON",
+    "value": ";",
+    "line": 2
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "name": "Compiler",
+  "version": "1.0.0",
+  "description": "Building a compiler in js for the compiler discipline",
+  "main": "lexer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuoLuann/Compiler.git"
+  },
+  "keywords": [],
+  "author": "Luann Ferreira, Thiago Fabricio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LuoLuann/Compiler/issues"
+  },
+  "homepage": "https://github.com/LuoLuann/Compiler#readme"
+}

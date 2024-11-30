@@ -1,0 +1,47 @@
+// Definição de uma função
+function factorial(n) {
+    var result = 1;
+    while (n > 1) {
+        result = result * n;
+        n = n - 1;
+    }
+    return result;
+}
+
+// Chamada da função
+var num = 5;
+var fact = factorial(num);
+print(fact); // Esperado: 120
+
+// Condicional com operadores lógicos
+if (num >= 5 && num <= 10) {
+    print("Número dentro do intervalo.");
+} else {
+    print("Número fora do intervalo.");
+}
+
+// Uso de booleanos
+var isEven = (num % 2 == 0);
+if (isEven) {
+    print("O número é par.");
+} else {
+    print("O número é ímpar.");
+}
+
+// Laço de repetição
+for (var i = 0; i < 3; i = i + 1) {
+    print("Repetição número " + i);
+}
+
+// Estrutura de controle break e continue
+var counter = 0;
+while (counter < 10) {
+    if (counter == 5) {
+        continue; // Pula a iteração quando o counter for igual a 5
+    }
+    if (counter == 8) {
+        break; // Sai do laço quando o counter for igual a 8
+    }
+    print(counter);
+    counter = counter + 1;
+}
