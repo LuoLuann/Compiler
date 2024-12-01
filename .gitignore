@@ -1,0 +1,7 @@
+# retirando o node modules
+
+node_modules/
+
+# removendo o package-lock.json
+
+package-lock.json
