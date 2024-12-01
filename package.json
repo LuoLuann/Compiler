@@ -4,6 +4,7 @@
   "description": "Building a compiler in js for the compiler discipline",
   "main": "lexer.js",
   "scripts": {
+    "start": "node ./src/compiler.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
