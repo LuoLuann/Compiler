@@ -6,9 +6,17 @@ class Parser {
         this.current = 0 // ponteiro para o token atual
         this.symbolTable = new SymbolTable()
     }
-
+    
     parse() {
-        return this.program()
+        const ast = this.program()
+
+        if (this.currentToken().type !== "EOF") {
+            throw new SyntaxError(
+                `Tokens unexpected after end of program: ${this.currentToken().value} on line ${this.currentToken().line}`
+            )
+        }
+
+        return ast
     }
 
     program() {
@@ -26,7 +34,7 @@ class Parser {
             throw new SyntaxError(`Function main expect as "main" but was found "${mainFunction.value}" on line ${mainFunction.line}`)
         }
 
-        this.match("SYMBOL"); // `{`
+        this.match("LBRACE"); // `{`
 
         this.symbolTable.enterScope()
 
@@ -54,9 +62,80 @@ class Parser {
         } else if (token.type === "FUNCTION") {
             return this.functionDeclaration();
         } else {
-            throw new SyntaxError(`Declaração global inválida: "${token.type}" na linha ${token.line}`);
+            throw new SyntaxError(`Invalid global declaration: "${token.type}" on line ${token.line}`);
         }
     }
+
+    block () {
+
+        if (this.currentToken().type === 'EOF') {
+            console.log("entrou nessa bct")
+            return null
+        }
+        console.log("cu aa ", this.currentToken())
+        console.log("pre rbrace ", this.lookAhead())
+        console.log("pre rbrace ", this.lookAhead(2))
+
+        this.match("LBRACE")
+
+        let commands = []
+
+        while (this.currentToken().type !== "RBRACE" && this.currentToken().type !== "EOF") {
+            commands.push(this.comand())
+        }
+        console.log("cu ", this.currentToken())
+        console.log("pre rbrace ", this.lookAhead())
+        console.log("pre rbrace ", this.lookAhead(2))
+        this.match("RBRACE")
+
+        if (this.currentToken().type === 'EOF') {
+            return null
+        }
+
+        return {
+            type: "Block",
+            commands
+        }
+    }
+
+    comand() {
+        const token = this.currentToken();
+        console.log("token on command: ", token);
+    
+        // Verifica se o token é EOF (fim do arquivo)
+        if (token.type === "EOF") {
+            return null; // Retorna nulo ou algo indicando que o comando não existe
+        }
+    
+        switch (token.type) {
+            case "VARIABLE":
+                return this.variableDeclaration();
+            case "IDENTIFIER":
+                if (this.lookAhead().type === "ASSIGN") {
+                    return this.assignment();
+                } else if (this.lookAhead().type === "LPAREN") {
+                    return this.functionDeclaration();
+                }
+                break;
+            case "IF":
+                return this.ifStatement();
+            case "WHILE": 
+                return this.whileLoop();
+            case "PRINT":
+                return this.printStatement();
+            case "BREAK":
+            case "CONTINUE":
+            case "RETURN":
+                return this.returnStatement();
+            case "FUNCTION":
+                return this.functionDeclaration();
+            default:
+                throw new SyntaxError(
+                    `Invalid command: Token unexpected type: ${token.type} value: (${token.value}) on line ${token.line}`
+                );
+        }
+    }
+    
 
     constantDeclaration() {
         // console.log("look ahead: ", this.lookAhead())
@@ -88,24 +167,70 @@ class Parser {
         }
     }
 
+    returnStatement() {
+        this.match("RETURN")
+
+        let expression = null
+        if (this.currentToken().type !== "SEMICOLON") {
+            expression = this.expression()
+        }
+
+        this.match("SEMICOLON")
+        this.match("RBRACE")
+        return {
+            type: "ReturnStatement",
+            expression
+        }
+    }
+
+    variableDeclaration() {
+        this.match("VARIABLE")
+
+        const id = this.match("IDENTIFIER").value
+
+        // console.log("id: ", id)
+        // console.log("current token on this.variableDeclaration: ", this.currentToken())
+
+        this.match("COLON")
+
+        const type = this.match("TYPE").value
+        let value = null
+
+        if(this.currentToken().type === "ASSIGN") {
+            this.match("ASSIGN")
+            value = this.expression()
+        }
+
+        this.match("SEMICOLON")
+
+        return {
+            type: "variableDeclaration",
+            id,
+            varType: type,
+            value
+        }
+    }
+
     functionDeclaration() {
         this.match("FUNCTION")
         const id = this.match("IDENTIFIER").value
 
-        this.match("LPAREN")
-
         const params = []
-
-        console.log("current token: ", this.currentToken())
-        console.log("look ahead: ", this.lookAhead())
-        console.log("look ahead 2: ", this.lookAhead(2))
-
-        if (this.currentToken().type !== "RPAREN") {
-            console.log("dentro if", this.currentToken())
-            params.push(...this.parameters())
+        if (id !== "main") {
+            this.match("LPAREN")
+    
+            // console.log("current token: ", this.currentToken())
+            // console.log("look ahead: ", this.lookAhead())
+            // console.log("look ahead 2: ", this.lookAhead(2))
+    
+            if (this.currentToken().type !== "RPAREN") {
+                // console.log("dentro if", this.currentToken())
+                params.push(...this.parameters())
+            }
+    
+            this.match("RPAREN")
         }
 
-        this.match("RPAREN")
 
         let returnType = null
 
@@ -113,16 +238,15 @@ class Parser {
             this.match("COLON")
             returnType = this.match("TYPE").value
         }
-
-        this.match("LBRACE")
+        console.log("current token apos params: ", this.currentToken())
+        console.log("look ahead token apos params: ", this.lookAhead())
 
         this.symbolTable.enterScope()
-
         const body = this.block()
 
         this.symbolTable.exitScope()
 
-        this.match("RBRACE")
+        // this.match("RBRACE")
 
         this.symbolTable.add(id, {
             type: 'function',
@@ -141,7 +265,7 @@ class Parser {
 
     parameters() {
         const params = []
-        console.log("current type in parameters: ", this.currentToken())
+        // console.log("current type in parameters: ", this.currentToken())
         while(this.currentToken().type == 'IDENTIFIER') {
             const id = this.match('IDENTIFIER').value
             console.log("id: ", id)
@@ -157,7 +281,7 @@ class Parser {
                 break
             }
         }
-        console.log("params: ", params)
+        // console.log("params: ", params)
         return params
     }
 
@@ -275,6 +399,7 @@ class Parser {
     lookAhead(i = 1) {
         return this.tokens[this.current + i]
     }
+
     match(expectedType) {
         const token = this.currentToken()
 
@@ -283,6 +408,26 @@ class Parser {
             return token
         } else {
             throw new SyntaxError(`Expect ${expectedType}, but found ${token.type} on line ${token.line}`)
+        }
+    }
+
+    printStatement() {
+        this.match("PRINT")
+
+        this.match("LPAREN")
+
+        const value = this.expression()
+
+        this.match("RPAREN")
+        this.match("SEMICOLON")
+
+        console.log({
+            type: "printStatement",
+            body: value
+        })
+        return {
+            type: "printStatement",
+            body: value
         }
     }
 }
