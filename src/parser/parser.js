@@ -187,6 +187,37 @@ class Parser {
         }
     }
 
+    ifStatement() {
+        this.match("IF")
+
+        this.match("LPAREN")
+
+        const condition = this.expression();
+
+        console.log("condition: ", condition)
+
+        this.match("RPAREN")
+
+        const body = this.block();
+
+        let elseBranch = null
+        if (this.currentToken().type === "ELSE") {
+            this.match("ELSE")
+            if (this.currentToken().type === "IF") {
+                elseBranch = this.ifStatement()
+            } else {
+                elseBranch = this.block()
+            }
+        }
+
+        return {
+            type: 'IFStatement',
+            condition,
+            body,
+            elseBranch
+        }
+    }
+
     variableDeclaration() {
         this.match("VARIABLE")
 
@@ -277,20 +308,23 @@ class Parser {
     }
 
     expression() {
-        const token = this.currentToken()
-
         // processar o lado esquerdo da expressao para verificar se é:
         // 1. um número (literal)
         // 2. uma variavel(identifier)
         // 3. uma subexpressão (3 + 5)
         const left = this.arithmeticExpression()
 
+        console.log("dentro de expression")
+        console.log("token atual: ", this.currentToken())
+        console.log("prox token: ", this.lookAhead())
+
         // é processado apos encontrar um operador relacional, ele pode ser:
         // 1. um numero
         // 2. outra subexpressão (3 * 5)
-        if (["EQUAL", "DIFFERENT", "GREATER", "GREATER_OR_EQUAL", "LESS", "LESS_OR_EQUAL"].includes(token.type)) {
-            const operator = this.match(token.type)
+        if (["EQUAL", "DIFFERENT", "GREATER", "GREATER_OR_EQUAL", "LESS", "LESS_OR_EQUAL"].includes(this.currentToken().type)) {
+            const operator = this.match(this.currentToken().type); // Consome o operador relacional
 
+            console.log("aqui dentro ooooo")
             const right = this.arithmeticExpression()
 
             return {
