@@ -31,9 +31,7 @@ class Parser {
     ) {
             globalDeclarations.push(this.globalDeclaration());
         }
-        console.log("saiu do loop: ", this.currentToken())
-    
-        // Verificar se ainda existem tokens após as declarações globais
+        
         if (this.currentToken().type === "EOF") {
             throw new SyntaxError("Program must contain a main function.");
         }
@@ -93,7 +91,7 @@ class Parser {
         console.log(`Token atual: ${JSON.stringify(current)}`);
         console.log(`Próximo token (lookahead): ${JSON.stringify(lookahead)}`);
         console.log("-".repeat(50));
-    }    
+    }
 
     block () {
         this.trackProcessing("Início do bloco");
@@ -104,7 +102,7 @@ class Parser {
         while (this.currentToken().type !== "RBRACE" && this.currentToken().type !== "EOF") {
             this.trackProcessing("Dentro do bloco");
 
-            commands.push(this.comand())
+            commands.push(this.command())
         }
         
         this.match("RBRACE")
@@ -115,7 +113,7 @@ class Parser {
         }
     }
 
-    comand() {
+    command() {
         this.trackProcessing("Início do comando");
         const token = this.currentToken();
     
@@ -150,7 +148,7 @@ class Parser {
     
 
     constantDeclaration() {
-        this.match("CONST"); // consome uma constante
+        this.match("CONST");
 
         const id = this.match("IDENTIFIER").value
 
