@@ -1,4 +1,0 @@
-nome1
-valor2
-meuID123
-MewTwo

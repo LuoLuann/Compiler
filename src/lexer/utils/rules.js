@@ -11,8 +11,10 @@ module.exports = [
     { regex: /\bvar\b/, type: "VARIABLE" },
     { regex: /\bfunction\b/, type: "FUNCTION" },
     { regex: /\bprint\b/, type: "PRINT" },
+    { regex: /^\binteger\b|\bboolean\b/, type: "TYPE" },
 
-    // Identifiers (letters, numbers, and underscores, starting with a letter or underscore)
+    { regex: /^\true\b|\false\b/, type: "BOOLEAN" },
+
     { regex: /^[a-zA-Z_][a-zA-Z0-9_]*/, type: "IDENTIFIER" },
     
     // Numbers (integers and decimals)
@@ -35,6 +37,8 @@ module.exports = [
     { regex: /^\)/, type: "RPAREN" },
     { regex: /^\{/, type: "LBRACE" },
     { regex: /^\}/, type: "RBRACE" },
+    { regex: /^\,/, type: "COMMA" },
+    { regex: /^\:/, type: "COLON" },
 
     // Whitespace (ignored)
     { regex: /^\s+/, type: "WHITESPACE" },

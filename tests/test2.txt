@@ -1,0 +1,9 @@
+const pi: integer = 3;
+function soma(a: integer, b: integer): integer {
+    return a + b;
+}
+
+function main {
+    var x: integer = 10;
+    print(x);
+}
