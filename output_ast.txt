@@ -1,51 +1,6 @@
 {
   "type": "Program",
-  "globalDeclarations": [
-    {
-      "type": "ConstantDeclaration",
-      "id": "pi",
-      "varType": "integer",
-      "value": {
-        "type": "Literal",
-        "value": "3"
-      }
-    },
-    {
-      "type": "FunctionDeclaration",
-      "id": "soma",
-      "params": [
-        {
-          "id": "a",
-          "type": "integer"
-        },
-        {
-          "id": "b",
-          "type": "integer"
-        }
-      ],
-      "returnType": "integer",
-      "body": {
-        "type": "Block",
-        "commands": [
-          {
-            "type": "ReturnStatement",
-            "expression": {
-              "type": "ArithmeticExpression",
-              "operator": "+",
-              "left": {
-                "type": "Identifier",
-                "name": "a"
-              },
-              "right": {
-                "type": "Identifier",
-                "name": "b"
-              }
-            }
-          }
-        ]
-      }
-    }
-  ],
+  "globalDeclarations": [],
   "main": {
     "type": "MainFunction",
     "name": "main",
@@ -62,10 +17,42 @@
           }
         },
         {
-          "type": "printStatement",
+          "type": "IFStatement",
+          "condition": {
+            "type": "RelationalExpression",
+            "operator": "==",
+            "left": {
+              "type": "Identifier",
+              "name": "x"
+            },
+            "right": {
+              "type": "Literal",
+              "value": "10"
+            }
+          },
           "body": {
-            "type": "Identifier",
-            "name": "x"
+            "type": "Block",
+            "commands": [
+              {
+                "type": "printStatement",
+                "body": {
+                  "type": "Identifier",
+                  "name": "x"
+                }
+              }
+            ]
+          },
+          "elseBranch": {
+            "type": "Block",
+            "commands": [
+              {
+                "type": "printStatement",
+                "body": {
+                  "type": "Literal",
+                  "value": "0"
+                }
+              }
+            ]
           }
         }
       ]

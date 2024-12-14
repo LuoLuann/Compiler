@@ -1,0 +1,10 @@
+function main {
+    var x: integer = 10;
+    
+    if (x == 10) {
+        print(x);
+    } else {
+        print(0);
+    }
+}
+

@@ -1,147 +1,122 @@
 [
   {
-    "type": "CONST",
-    "value": "const",
-    "line": 1
-  },
-  {
-    "type": "IDENTIFIER",
-    "value": "pi",
-    "line": 1
-  },
-  {
-    "type": "COLON",
-    "value": ":",
-    "line": 1
-  },
-  {
-    "type": "TYPE",
-    "value": "integer",
-    "line": 1
-  },
-  {
-    "type": "ASSIGN",
-    "value": "=",
-    "line": 1
-  },
-  {
-    "type": "NUMBER",
-    "value": "3",
-    "line": 1
-  },
-  {
-    "type": "SEMICOLON",
-    "value": ";",
-    "line": 1
-  },
-  {
     "type": "FUNCTION",
     "value": "function",
-    "line": 2
-  },
-  {
-    "type": "IDENTIFIER",
-    "value": "soma",
-    "line": 2
-  },
-  {
-    "type": "LPAREN",
-    "value": "(",
-    "line": 2
-  },
-  {
-    "type": "IDENTIFIER",
-    "value": "a",
-    "line": 2
-  },
-  {
-    "type": "COLON",
-    "value": ":",
-    "line": 2
-  },
-  {
-    "type": "TYPE",
-    "value": "integer",
-    "line": 2
-  },
-  {
-    "type": "COMMA",
-    "value": ",",
-    "line": 2
-  },
-  {
-    "type": "IDENTIFIER",
-    "value": "b",
-    "line": 2
-  },
-  {
-    "type": "COLON",
-    "value": ":",
-    "line": 2
-  },
-  {
-    "type": "TYPE",
-    "value": "integer",
-    "line": 2
-  },
-  {
-    "type": "RPAREN",
-    "value": ")",
-    "line": 2
-  },
-  {
-    "type": "COLON",
-    "value": ":",
-    "line": 2
-  },
-  {
-    "type": "TYPE",
-    "value": "integer",
-    "line": 2
-  },
-  {
-    "type": "LBRACE",
-    "value": "{",
-    "line": 2
-  },
-  {
-    "type": "RETURN",
-    "value": "return",
-    "line": 3
-  },
-  {
-    "type": "IDENTIFIER",
-    "value": "a",
-    "line": 3
-  },
-  {
-    "type": "PLUS",
-    "value": "+",
-    "line": 3
-  },
-  {
-    "type": "IDENTIFIER",
-    "value": "b",
-    "line": 3
-  },
-  {
-    "type": "SEMICOLON",
-    "value": ";",
-    "line": 3
-  },
-  {
-    "type": "RBRACE",
-    "value": "}",
-    "line": 4
-  },
-  {
-    "type": "FUNCTION",
-    "value": "function",
-    "line": 6
+    "line": 1
   },
   {
     "type": "MAIN",
     "value": "main",
+    "line": 1
+  },
+  {
+    "type": "LBRACE",
+    "value": "{",
+    "line": 1
+  },
+  {
+    "type": "VARIABLE",
+    "value": "var",
+    "line": 2
+  },
+  {
+    "type": "IDENTIFIER",
+    "value": "x",
+    "line": 2
+  },
+  {
+    "type": "COLON",
+    "value": ":",
+    "line": 2
+  },
+  {
+    "type": "TYPE",
+    "value": "integer",
+    "line": 2
+  },
+  {
+    "type": "ASSIGN",
+    "value": "=",
+    "line": 2
+  },
+  {
+    "type": "NUMBER",
+    "value": "10",
+    "line": 2
+  },
+  {
+    "type": "SEMICOLON",
+    "value": ";",
+    "line": 2
+  },
+  {
+    "type": "IF",
+    "value": "if",
+    "line": 4
+  },
+  {
+    "type": "LPAREN",
+    "value": "(",
+    "line": 4
+  },
+  {
+    "type": "IDENTIFIER",
+    "value": "x",
+    "line": 4
+  },
+  {
+    "type": "EQUAL",
+    "value": "==",
+    "line": 4
+  },
+  {
+    "type": "NUMBER",
+    "value": "10",
+    "line": 4
+  },
+  {
+    "type": "RPAREN",
+    "value": ")",
+    "line": 4
+  },
+  {
+    "type": "LBRACE",
+    "value": "{",
+    "line": 4
+  },
+  {
+    "type": "PRINT",
+    "value": "print",
+    "line": 5
+  },
+  {
+    "type": "LPAREN",
+    "value": "(",
+    "line": 5
+  },
+  {
+    "type": "IDENTIFIER",
+    "value": "x",
+    "line": 5
+  },
+  {
+    "type": "RPAREN",
+    "value": ")",
+    "line": 5
+  },
+  {
+    "type": "SEMICOLON",
+    "value": ";",
+    "line": 5
+  },
+  {
+    "type": "RBRACE",
+    "value": "}",
+    "line": 6
+  },
+  {
+    "type": "ELSE",
+    "value": "else",
     "line": 6
   },
   {
@@ -150,63 +125,33 @@
     "line": 6
   },
   {
-    "type": "VARIABLE",
-    "value": "var",
-    "line": 7
-  },
-  {
-    "type": "IDENTIFIER",
-    "value": "x",
-    "line": 7
-  },
-  {
-    "type": "COLON",
-    "value": ":",
-    "line": 7
-  },
-  {
-    "type": "TYPE",
-    "value": "integer",
-    "line": 7
-  },
-  {
-    "type": "ASSIGN",
-    "value": "=",
-    "line": 7
-  },
-  {
-    "type": "NUMBER",
-    "value": "10",
-    "line": 7
-  },
-  {
-    "type": "SEMICOLON",
-    "value": ";",
-    "line": 7
-  },
-  {
     "type": "PRINT",
     "value": "print",
-    "line": 8
+    "line": 7
   },
   {
     "type": "LPAREN",
     "value": "(",
-    "line": 8
+    "line": 7
   },
   {
-    "type": "IDENTIFIER",
-    "value": "x",
-    "line": 8
+    "type": "NUMBER",
+    "value": "0",
+    "line": 7
   },
   {
     "type": "RPAREN",
     "value": ")",
-    "line": 8
+    "line": 7
   },
   {
     "type": "SEMICOLON",
     "value": ";",
+    "line": 7
+  },
+  {
+    "type": "RBRACE",
+    "value": "}",
     "line": 8
   },
   {
