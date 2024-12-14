@@ -4,6 +4,20 @@ class SymbolTable {
     constructor() {
         // pilha de escopos começando pelo global
         this.scopes = [new Map()]
+
+        /**
+         * {
+            "pi": { "type": "integer", "value": 3, "constant": true },
+            "add": {
+                "type": "function",
+                "params": [
+                    { "id": "x", "type": "integer" },
+                    { "id": "y", "type": "integer" }
+                ],
+                "returnType": "integer"
+            }
+        }
+         */
     }
 
     add(identifier, properties) {
@@ -23,6 +37,11 @@ class SymbolTable {
 
         throw new Error(`Symbol ${identifier} is not defined`);
     }
+
+    currentScope() {
+        return this.scopes[this.scopes.length - 1];
+    }
+    
 
     get (identifier) {
         for (let i = this.scopes.length - 1; i>= 0; i--) {
