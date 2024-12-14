@@ -8,33 +8,55 @@ class Parser {
     }
     
     parse() {
-        const ast = this.program()
-
-        if (this.currentToken().type !== "EOF") {
+        const ast = this.program();
+    
+        // Verificar se todos os tokens foram consumidos
+        if (this.current < this.tokens.length) {
+            const leftoverToken = this.currentToken();
             throw new SyntaxError(
-                `Tokens unexpected after end of program: ${this.currentToken().value} on line ${this.currentToken().line}`
-            )
+                `Tokens não consumidos após o fim do programa: ${leftoverToken.type} (${leftoverToken.value}) na linha ${leftoverToken.line}.`
+            );
         }
-
-        return ast
+    
+        return ast;
     }
+    
 
     program() {
-        const globalDeclarations = []
-
-        while (this.currentToken().type === 'CONST' || this.currentToken().type === 'FUNCTION') {
-            globalDeclarations.push(this.globalDeclaration())
+        const globalDeclarations = [];
+    
+        while (this.currentToken().type === "CONST" || 
+        this.currentToken().type === "FUNCTION" && 
+        this.lookAhead().type !== "MAIN"
+    ) {
+            globalDeclarations.push(this.globalDeclaration());
         }
+        console.log("saiu do loop: ", this.currentToken())
+    
+        // Verificar se ainda existem tokens após as declarações globais
+        if (this.currentToken().type === "EOF") {
+            throw new SyntaxError("Program must contain a main function.");
+        }
+    
+        const main = this.mainDeclaration();
+    
+        return {
+            type: "Program",
+            globalDeclarations,
+            main
+        };
+    }
 
-        // Garantir que há uma função main
-        this.match("FUNCTION"); // `function`
-        const mainFunction = this.match("IDENTIFIER")
+    mainDeclaration() {
+        this.match("FUNCTION")
+
+        const mainFunction = this.match("MAIN");
 
         if (mainFunction.value !== "main") {
-            throw new SyntaxError(`Function main expect as "main" but was found "${mainFunction.value}" on line ${mainFunction.line}`)
+            throw new SyntaxError(
+                `Expected function 'main', but found '${mainFunction.value}' on line ${mainFunction.line}`
+            );
         }
-
-        this.match("LBRACE"); // `{`
 
         this.symbolTable.enterScope()
 
@@ -42,17 +64,15 @@ class Parser {
 
         this.symbolTable.exitScope()
 
-        this.match("SYMBOL");
+        this.symbolTable.add("main", { type: "function", scope: body });
 
         return {
-            type: "Program",
-            globalDeclarations,
-            main: {
-                name: mainFunction.value,
-                body
-            }
+            type: "MainFunction",
+            name: mainFunction.value,
+            body
         }
     }
+    
 
     globalDeclaration() {
         const token = this.currentToken()
@@ -66,31 +86,28 @@ class Parser {
         }
     }
 
+    trackProcessing(context) {
+        const current = this.currentToken();
+        const lookahead = this.lookAhead() || { type: "EOF", value: "EOF", line: -1 };
+        console.log(`Contexto: ${context}`);
+        console.log(`Token atual: ${JSON.stringify(current)}`);
+        console.log(`Próximo token (lookahead): ${JSON.stringify(lookahead)}`);
+        console.log("-".repeat(50));
+    }    
+
     block () {
-
-        if (this.currentToken().type === 'EOF') {
-            console.log("entrou nessa bct")
-            return null
-        }
-        console.log("cu aa ", this.currentToken())
-        console.log("pre rbrace ", this.lookAhead())
-        console.log("pre rbrace ", this.lookAhead(2))
-
+        this.trackProcessing("Início do bloco");
         this.match("LBRACE")
 
         let commands = []
 
         while (this.currentToken().type !== "RBRACE" && this.currentToken().type !== "EOF") {
+            this.trackProcessing("Dentro do bloco");
+
             commands.push(this.comand())
         }
-        console.log("cu ", this.currentToken())
-        console.log("pre rbrace ", this.lookAhead())
-        console.log("pre rbrace ", this.lookAhead(2))
+        
         this.match("RBRACE")
-
-        if (this.currentToken().type === 'EOF') {
-            return null
-        }
 
         return {
             type: "Block",
@@ -99,13 +116,8 @@ class Parser {
     }
 
     comand() {
+        this.trackProcessing("Início do comando");
         const token = this.currentToken();
-        console.log("token on command: ", token);
-    
-        // Verifica se o token é EOF (fim do arquivo)
-        if (token.type === "EOF") {
-            return null; // Retorna nulo ou algo indicando que o comando não existe
-        }
     
         switch (token.type) {
             case "VARIABLE":
@@ -138,16 +150,11 @@ class Parser {
     
 
     constantDeclaration() {
-        // console.log("look ahead: ", this.lookAhead())
         this.match("CONST"); // consome uma constante
-        // console.log("current token: ", this.currentToken())
-        // console.log("look ahead: ", this.lookAhead()) 
+
         const id = this.match("IDENTIFIER").value
-        // console.log("current token: ", this.currentToken())
-        // console.log("look ahead: ", this.lookAhead())
+
         this.match("COLON")
-        // console.log("current token: ", this.currentToken())
-        // console.log("look ahead 2 : ", this.lookAhead(2))
 
         const type = this.match("TYPE").value
         
@@ -176,7 +183,6 @@ class Parser {
         }
 
         this.match("SEMICOLON")
-        this.match("RBRACE")
         return {
             type: "ReturnStatement",
             expression
@@ -187,9 +193,6 @@ class Parser {
         this.match("VARIABLE")
 
         const id = this.match("IDENTIFIER").value
-
-        // console.log("id: ", id)
-        // console.log("current token on this.variableDeclaration: ", this.currentToken())
 
         this.match("COLON")
 
@@ -219,12 +222,7 @@ class Parser {
         if (id !== "main") {
             this.match("LPAREN")
     
-            // console.log("current token: ", this.currentToken())
-            // console.log("look ahead: ", this.lookAhead())
-            // console.log("look ahead 2: ", this.lookAhead(2))
-    
             if (this.currentToken().type !== "RPAREN") {
-                // console.log("dentro if", this.currentToken())
                 params.push(...this.parameters())
             }
     
@@ -238,8 +236,6 @@ class Parser {
             this.match("COLON")
             returnType = this.match("TYPE").value
         }
-        console.log("current token apos params: ", this.currentToken())
-        console.log("look ahead token apos params: ", this.lookAhead())
 
         this.symbolTable.enterScope()
         const body = this.block()
@@ -265,10 +261,8 @@ class Parser {
 
     parameters() {
         const params = []
-        // console.log("current type in parameters: ", this.currentToken())
         while(this.currentToken().type == 'IDENTIFIER') {
             const id = this.match('IDENTIFIER').value
-            console.log("id: ", id)
 
             this.match('COLON')
 
@@ -281,26 +275,23 @@ class Parser {
                 break
             }
         }
-        // console.log("params: ", params)
         return params
     }
 
     expression() {
         const token = this.currentToken()
-        // console.log("token dentro de expression: ", token)
+
         // processar o lado esquerdo da expressao para verificar se é:
         // 1. um número (literal)
         // 2. uma variavel(identifier)
         // 3. uma subexpressão (3 + 5)
         const left = this.arithmeticExpression()
-        // console.log("left dentro de expression: ", left)
 
         // é processado apos encontrar um operador relacional, ele pode ser:
         // 1. um numero
         // 2. outra subexpressão (3 * 5)
         if (["EQUAL", "DIFFERENT", "GREATER", "GREATER_OR_EQUAL", "LESS", "LESS_OR_EQUAL"].includes(token.type)) {
             const operator = this.match(token.type)
-            // console.log("operator dentro de expression: ", operator)
 
             const right = this.arithmeticExpression()
 
@@ -338,7 +329,6 @@ class Parser {
                     right
                 }
             }
-            // console.log("token dentro de arithmeticExpression: ", left)
 
             return left
     }
@@ -401,6 +391,7 @@ class Parser {
     }
 
     match(expectedType) {
+        this.trackProcessing(`Tentando casar ${expectedType}, current token: ${this.currentToken()}`);
         const token = this.currentToken()
 
         if (token.type === expectedType) {
@@ -421,10 +412,6 @@ class Parser {
         this.match("RPAREN")
         this.match("SEMICOLON")
 
-        console.log({
-            type: "printStatement",
-            body: value
-        })
         return {
             type: "printStatement",
             body: value
