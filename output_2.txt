@@ -5,158 +5,288 @@
     "line": 1
   },
   {
-    "type": "MAIN",
-    "value": "main",
+    "type": "IDENTIFIER",
+    "value": "procedure",
+    "line": 1
+  },
+  {
+    "type": "LPAREN",
+    "value": "(",
+    "line": 1
+  },
+  {
+    "type": "RPAREN",
+    "value": ")",
     "line": 1
   },
   {
     "type": "LBRACE",
     "value": "{",
     "line": 1
+  },
+  {
+    "type": "PRINT",
+    "value": "print",
+    "line": 2
+  },
+  {
+    "type": "LPAREN",
+    "value": "(",
+    "line": 2
+  },
+  {
+    "type": "NUMBER",
+    "value": "10",
+    "line": 2
+  },
+  {
+    "type": "RPAREN",
+    "value": ")",
+    "line": 2
+  },
+  {
+    "type": "SEMICOLON",
+    "value": ";",
+    "line": 2
+  },
+  {
+    "type": "RBRACE",
+    "value": "}",
+    "line": 3
+  },
+  {
+    "type": "FUNCTION",
+    "value": "function",
+    "line": 5
+  },
+  {
+    "type": "MAIN",
+    "value": "main",
+    "line": 5
+  },
+  {
+    "type": "LBRACE",
+    "value": "{",
+    "line": 5
   },
   {
     "type": "VARIABLE",
     "value": "var",
-    "line": 2
+    "line": 6
   },
   {
     "type": "IDENTIFIER",
     "value": "x",
-    "line": 2
+    "line": 6
   },
   {
     "type": "COLON",
     "value": ":",
-    "line": 2
+    "line": 6
   },
   {
     "type": "TYPE",
     "value": "integer",
-    "line": 2
+    "line": 6
   },
   {
     "type": "ASSIGN",
     "value": "=",
-    "line": 2
+    "line": 6
   },
   {
     "type": "NUMBER",
     "value": "10",
-    "line": 2
+    "line": 6
   },
   {
     "type": "SEMICOLON",
     "value": ";",
-    "line": 2
+    "line": 6
   },
   {
     "type": "IF",
     "value": "if",
-    "line": 4
+    "line": 8
   },
   {
     "type": "LPAREN",
     "value": "(",
-    "line": 4
+    "line": 8
   },
   {
     "type": "IDENTIFIER",
     "value": "x",
-    "line": 4
+    "line": 8
   },
   {
     "type": "EQUAL",
     "value": "==",
-    "line": 4
+    "line": 8
   },
   {
     "type": "NUMBER",
     "value": "10",
-    "line": 4
+    "line": 8
   },
   {
     "type": "RPAREN",
     "value": ")",
-    "line": 4
+    "line": 8
   },
   {
     "type": "LBRACE",
     "value": "{",
-    "line": 4
+    "line": 8
   },
   {
     "type": "PRINT",
     "value": "print",
-    "line": 5
+    "line": 9
   },
   {
     "type": "LPAREN",
     "value": "(",
-    "line": 5
+    "line": 9
   },
   {
     "type": "IDENTIFIER",
     "value": "x",
-    "line": 5
+    "line": 9
   },
   {
     "type": "RPAREN",
     "value": ")",
-    "line": 5
+    "line": 9
   },
   {
     "type": "SEMICOLON",
     "value": ";",
-    "line": 5
+    "line": 9
   },
   {
     "type": "RBRACE",
     "value": "}",
-    "line": 6
+    "line": 10
   },
   {
     "type": "ELSE",
     "value": "else",
-    "line": 6
+    "line": 10
   },
   {
     "type": "LBRACE",
     "value": "{",
-    "line": 6
+    "line": 10
   },
   {
     "type": "PRINT",
     "value": "print",
-    "line": 7
+    "line": 11
   },
   {
     "type": "LPAREN",
     "value": "(",
-    "line": 7
+    "line": 11
   },
   {
     "type": "NUMBER",
     "value": "0",
-    "line": 7
+    "line": 11
   },
   {
     "type": "RPAREN",
     "value": ")",
-    "line": 7
+    "line": 11
   },
   {
     "type": "SEMICOLON",
     "value": ";",
-    "line": 7
+    "line": 11
   },
   {
     "type": "RBRACE",
     "value": "}",
-    "line": 8
+    "line": 12
+  },
+  {
+    "type": "IF",
+    "value": "if",
+    "line": 14
+  },
+  {
+    "type": "LPAREN",
+    "value": "(",
+    "line": 14
+  },
+  {
+    "type": "IDENTIFIER",
+    "value": "x",
+    "line": 14
+  },
+  {
+    "type": "EQUAL",
+    "value": "==",
+    "line": 14
+  },
+  {
+    "type": "NUMBER",
+    "value": "10",
+    "line": 14
+  },
+  {
+    "type": "RPAREN",
+    "value": ")",
+    "line": 14
+  },
+  {
+    "type": "LBRACE",
+    "value": "{",
+    "line": 14
+  },
+  {
+    "type": "PRINT",
+    "value": "print",
+    "line": 15
+  },
+  {
+    "type": "LPAREN",
+    "value": "(",
+    "line": 15
+  },
+  {
+    "type": "IDENTIFIER",
+    "value": "x",
+    "line": 15
+  },
+  {
+    "type": "PLUS",
+    "value": "+",
+    "line": 15
+  },
+  {
+    "type": "NUMBER",
+    "value": "2",
+    "line": 15
+  },
+  {
+    "type": "RPAREN",
+    "value": ")",
+    "line": 15
+  },
+  {
+    "type": "SEMICOLON",
+    "value": ";",
+    "line": 15
   },
   {
     "type": "RBRACE",
     "value": "}",
-    "line": 9
+    "line": 16
+  },
+  {
+    "type": "RBRACE",
+    "value": "}",
+    "line": 17
   }
 ]

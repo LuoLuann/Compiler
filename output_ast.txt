@@ -1,6 +1,25 @@
 {
   "type": "Program",
-  "globalDeclarations": [],
+  "globalDeclarations": [
+    {
+      "type": "ProcedureDeclaration",
+      "id": "procedure",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "printStatement",
+            "body": {
+              "type": "Literal",
+              "value": "10"
+            }
+          }
+        ]
+      }
+    }
+  ],
   "main": {
     "type": "MainFunction",
     "name": "main",
@@ -54,6 +73,42 @@
               }
             ]
           }
+        },
+        {
+          "type": "IFStatement",
+          "condition": {
+            "type": "RelationalExpression",
+            "operator": "==",
+            "left": {
+              "type": "Identifier",
+              "name": "x"
+            },
+            "right": {
+              "type": "Literal",
+              "value": "10"
+            }
+          },
+          "body": {
+            "type": "Block",
+            "commands": [
+              {
+                "type": "printStatement",
+                "body": {
+                  "type": "ArithmeticExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "Identifier",
+                    "name": "x"
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "value": "2"
+                  }
+                }
+              }
+            ]
+          },
+          "elseBranch": null
         }
       ]
     }

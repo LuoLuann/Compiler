@@ -6,10 +6,10 @@ class Parser {
         this.current = 0 // ponteiro para o token atual
         this.symbolTable = new SymbolTable()
     }
-    
+
     parse() {
         const ast = this.program();
-    
+
         // Verificar se todos os tokens foram consumidos
         if (this.current < this.tokens.length) {
             const leftoverToken = this.currentToken();
@@ -17,27 +17,26 @@ class Parser {
                 `Tokens não consumidos após o fim do programa: ${leftoverToken.type} (${leftoverToken.value}) na linha ${leftoverToken.line}.`
             );
         }
-    
+
         return ast;
     }
-    
 
     program() {
         const globalDeclarations = [];
-    
-        while (this.currentToken().type === "CONST" || 
-        this.currentToken().type === "FUNCTION" && 
-        this.lookAhead().type !== "MAIN"
-    ) {
+
+        while (this.currentToken().type === "CONST" ||
+            this.currentToken().type === "FUNCTION" &&
+            this.lookAhead().type !== "MAIN"
+        ) {
             globalDeclarations.push(this.globalDeclaration());
         }
-        
+
         if (this.currentToken().type === "EOF") {
             throw new SyntaxError("Program must contain a main function.");
         }
-    
+
         const main = this.mainDeclaration();
-    
+
         return {
             type: "Program",
             globalDeclarations,
@@ -70,7 +69,6 @@ class Parser {
             body
         }
     }
-    
 
     globalDeclaration() {
         const token = this.currentToken()
@@ -93,7 +91,7 @@ class Parser {
         console.log("-".repeat(50));
     }
 
-    block () {
+    block() {
         this.trackProcessing("Início do bloco");
         this.match("LBRACE")
 
@@ -104,7 +102,7 @@ class Parser {
 
             commands.push(this.command())
         }
-        
+
         this.match("RBRACE")
 
         return {
@@ -116,7 +114,7 @@ class Parser {
     command() {
         this.trackProcessing("Início do comando");
         const token = this.currentToken();
-    
+
         switch (token.type) {
             case "VARIABLE":
                 return this.variableDeclaration();
@@ -129,7 +127,7 @@ class Parser {
                 break;
             case "IF":
                 return this.ifStatement();
-            case "WHILE": 
+            case "WHILE":
                 return this.whileLoop();
             case "PRINT":
                 return this.printStatement();
@@ -145,7 +143,6 @@ class Parser {
                 );
         }
     }
-    
 
     constantDeclaration() {
         this.match("CONST");
@@ -155,7 +152,7 @@ class Parser {
         this.match("COLON")
 
         const type = this.match("TYPE").value
-        
+
         this.match("ASSIGN")
 
         const value = this.expression() // analisar a expressão
@@ -194,8 +191,6 @@ class Parser {
 
         const condition = this.expression();
 
-        console.log("condition: ", condition)
-
         this.match("RPAREN")
 
         const body = this.block();
@@ -228,7 +223,7 @@ class Parser {
         const type = this.match("TYPE").value
         let value = null
 
-        if(this.currentToken().type === "ASSIGN") {
+        if (this.currentToken().type === "ASSIGN") {
             this.match("ASSIGN")
             value = this.expression()
         }
@@ -250,14 +245,13 @@ class Parser {
         const params = []
         if (id !== "main") {
             this.match("LPAREN")
-    
+
             if (this.currentToken().type !== "RPAREN") {
                 params.push(...this.parameters())
             }
-    
+
             this.match("RPAREN")
         }
-
 
         let returnType = null
 
@@ -267,11 +261,10 @@ class Parser {
         }
 
         this.symbolTable.enterScope()
+
         const body = this.block()
 
         this.symbolTable.exitScope()
-
-        // this.match("RBRACE")
 
         this.symbolTable.add(id, {
             type: 'function',
@@ -280,7 +273,7 @@ class Parser {
         })
 
         return {
-            type: "FunctionDeclaration",
+            type: returnType !== null ?  "FunctionDeclaration" : "ProcedureDeclaration",
             id,
             params,
             returnType,
@@ -290,7 +283,7 @@ class Parser {
 
     parameters() {
         const params = []
-        while(this.currentToken().type == 'IDENTIFIER') {
+        while (this.currentToken().type == 'IDENTIFIER') {
             const id = this.match('IDENTIFIER').value
 
             this.match('COLON')
@@ -314,17 +307,12 @@ class Parser {
         // 3. uma subexpressão (3 + 5)
         const left = this.arithmeticExpression()
 
-        console.log("dentro de expression")
-        console.log("token atual: ", this.currentToken())
-        console.log("prox token: ", this.lookAhead())
-
         // é processado apos encontrar um operador relacional, ele pode ser:
         // 1. um numero
         // 2. outra subexpressão (3 * 5)
         if (["EQUAL", "DIFFERENT", "GREATER", "GREATER_OR_EQUAL", "LESS", "LESS_OR_EQUAL"].includes(this.currentToken().type)) {
             const operator = this.match(this.currentToken().type); // Consome o operador relacional
 
-            console.log("aqui dentro ooooo")
             const right = this.arithmeticExpression()
 
             return {
@@ -333,7 +321,7 @@ class Parser {
                 left,
                 right
             }
-        }  
+        }
         return left
     }
 
@@ -348,21 +336,21 @@ class Parser {
 
          */
 
-            let left = this.term()
+        let left = this.term()
 
-            while(["PLUS", "MINUS"].includes(this.currentToken().type)) {
-                const operator = this.match(this.currentToken().type)
-                const right = this.term()
+        while (["PLUS", "MINUS"].includes(this.currentToken().type)) {
+            const operator = this.match(this.currentToken().type)
+            const right = this.term()
 
-                left = {
-                    type: "ArithmeticExpression",
-                    operator: operator.value,
-                    left, 
-                    right
-                }
+            left = {
+                type: "ArithmeticExpression",
+                operator: operator.value,
+                left,
+                right
             }
+        }
 
-            return left
+        return left
     }
 
     term() {
@@ -371,11 +359,11 @@ class Parser {
         while (["MULTIPLY", "DIVIDE"].includes(this.currentToken().type)) {
             const operator = this.match(this.currentToken().type)
             const right = this.factor()
-            
+
             left = {
                 type: "ArithmeticExpression",
                 operator: operator.value,
-                left, 
+                left,
                 right
             }
 
@@ -393,7 +381,7 @@ class Parser {
                     type: 'Literal',
                     value: this.match("NUMBER").value
                 }
-        
+
             case "IDENTIFIER":
                 return {
                     type: "Identifier",

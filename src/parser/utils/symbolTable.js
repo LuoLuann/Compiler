@@ -1,5 +1,3 @@
-
-
 class SymbolTable {
     constructor() {
         // pilha de escopos começando pelo global
