@@ -1,34 +1,139 @@
-function factorial(n) {
-    var result = 1;
-    while (n > 1) {
-        result = result * n;
+function whileTest(n: integer) {
+    while(n != 0) {
+        print(n);
         n = n - 1;
     }
-    return result;
 }
 
-var num = 5;
-var fact = factorial(num);
-print(fact);
-
-if (num >= 5) {
-    print(num);
-} else {
-    print(*);
+function procedureTest() {
+    print(10);
 }
 
-for (var i = 0; i < 3; i = i + 1) {
-    print(i);
+function funcaoTest(): integer {
+    print(10);
+    return 2;
 }
 
-var counter = 0;
-while (counter < 10) {
-    if (counter == 5) {
-        continue;
+function forTest() {
+    for(var i: integer = 0; i != 10; i = i + 1) {
+        print(i + 2);
     }
-    if (counter == 8) {
-        break;
+}
+
+function constTest() {
+    const PI: integer = 3;
+    print(PI);
+}
+
+function conditionalTest(x: integer, y: integer) {
+    if (x > y) {
+        print(x);
+    } else if (x == y) {
+        print(0);
+    } else {
+        print(y);
     }
-    print(counter);
-    counter = counter + 1;
+}
+
+function sum(a: integer, b: integer): integer {
+    return a + b;
+}
+
+function callFunctionTest() {
+    var result: integer = sum(10, 20);
+    print(result);
+}
+
+function loopControlTest() {
+    for (var i: integer = 0; i < 10; i = i + 1) {
+        if (i == 5) {
+            break;
+        }
+        if (i / 2 == 0) {
+            continue;
+        }
+        print(i);
+    }
+
+    var j: integer = 0;
+    
+    while (j < 5) {
+        j = j + 1;
+        if (j == 3) {
+            continue;
+        }
+        print(j);
+    }
+}
+
+function nestedLoopsTest() {
+    for (var i: integer = 0; i < 3; i = i + 1) {
+        while (i < 2) {
+            print(i);
+            break;
+        }
+    }
+}
+
+function greet(): integer {
+    print(100);
+    return 200;
+}
+
+function callGreet() {
+    var val: integer = greet();
+    print(val);
+}
+
+function complexArithmeticTest() {
+    var result: integer = (2 + 3) * 4 - 5 / (1 + 1);
+    print(result);
+}
+
+function multiply(a: integer, b: integer): integer {
+    return a * b;
+}
+
+function outerFunction() {
+    var product: integer = multiply(6, 7);
+    print(product);
+}
+
+function calculateArea(width: integer, height: integer): integer {
+    return width * height;
+}
+
+function areaTest() {
+    var w: integer = 5;
+    var h: integer = 10;
+    var area: integer = calculateArea(w + 2, h - 3);
+    print(area);
+}
+
+function mixedExpressionTest() {
+    var a: integer = 5;
+    var b: integer = 10;
+    var c: integer = 15;
+
+    if ((a + b) < c * 2) {
+        print(1);
+    } else {
+        print(0);
+    }
+}
+
+function main {
+    var x: integer = 15;
+    var y: integer = 20;
+
+    if (x < y) {
+        print(x + y);
+    } else if (x == y) {
+        print(0);
+    } else {
+        print(x - y);
+    }
+
+    callFunctionTest();
+    loopControlTest();
 }
