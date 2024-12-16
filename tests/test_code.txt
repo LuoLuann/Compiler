@@ -122,6 +122,19 @@ function mixedExpressionTest() {
     }
 }
 
+function booleanFunction () {
+    var x: boolean = true;
+    var y: boolean = false;
+}
+
+function booleanFunctionWithTypeAndParams (x: boolean, y: boolean): boolean {
+    var x: boolean = true;
+    var y: boolean = false;
+
+    return true;
+}
+
+
 function main {
     var x: integer = 15;
     var y: integer = 20;

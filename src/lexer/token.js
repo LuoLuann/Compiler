@@ -1,6 +1,6 @@
 class Token {
     constructor(type, value, line) {
-        this.type = type;
+        this.type = type; // ex: type: COLON, value: :, line: 13
         this.value = value;
         this.line = line;
     }

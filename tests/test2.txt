@@ -1,8 +1,10 @@
 const pi: integer = 3;
 
 function soma(a: integer, b: integer): integer {
+    var ifi: integer = 1;
     return a + b;
 }
+
 
 function main {
     var x: integer = 10;

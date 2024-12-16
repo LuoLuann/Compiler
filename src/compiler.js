@@ -8,17 +8,13 @@ const r1 = readline.createInterface({
     output: process.stdout,
 });
 
-// Ler todos os arquivos da pasta "tests"
 const dirPath = './tests';
 const files = fs.readdirSync(dirPath).filter(file => fs.statSync(`${dirPath}/${file}`).isFile());
 
-// Exibir a lista de arquivos com índice
 console.log("Arquivos disponíveis:");
 files.forEach((file, index) => {
     console.log(`${index + 1} - ${file}`);
 });
-
-const filepath = '.\tests\test2.txt'
 
 r1.question("Digite o número do arquivo que deseja processar: ", (choice) => {
     try {

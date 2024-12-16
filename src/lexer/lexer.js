@@ -19,9 +19,10 @@ class Lexer {
     _lineToTokens(line, lineNumber) {
         let lineTokens = [];
         line = line.trim();
+
         while (line) {
             let matched = false;
-
+            
             for (let { regex, type } of this.patterns) {
                 const match = line.match(regex);
                 

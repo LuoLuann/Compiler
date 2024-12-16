@@ -12,7 +12,7 @@ module.exports = [
     { regex: /^\bfunction\b/, type: "FUNCTION" },
     { regex: /^\bprint\b/, type: "PRINT" },
     { regex: /^\bmain\b/, type: "MAIN" },
-    { regex: /^\binteger\b|\bboolean\b/, type: "TYPE" },
+    { regex: /^\binteger\b|^\bboolean\b/, type: "TYPE" },
 
     { regex: /^\true\b|\false\b/, type: "BOOLEAN" },
 

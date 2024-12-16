@@ -2,18 +2,53 @@
   "type": "Program",
   "globalDeclarations": [
     {
-      "type": "ProcedureDeclaration",
-      "id": "procedure",
-      "params": [],
-      "returnType": null,
+      "type": "ConstantDeclaration",
+      "id": "pi",
+      "varType": "integer",
+      "value": {
+        "type": "Literal",
+        "value": "3"
+      }
+    },
+    {
+      "type": "FunctionDeclaration",
+      "id": "soma",
+      "params": [
+        {
+          "id": "a",
+          "type": "integer"
+        },
+        {
+          "id": "b",
+          "type": "integer"
+        }
+      ],
+      "returnType": "integer",
       "body": {
         "type": "Block",
         "commands": [
           {
-            "type": "printStatement",
-            "body": {
+            "type": "variableDeclaration",
+            "id": "ifi",
+            "varType": "integer",
+            "value": {
               "type": "Literal",
-              "value": "10"
+              "value": "1"
+            }
+          },
+          {
+            "type": "ReturnStatement",
+            "expression": {
+              "type": "ArithmeticExpression",
+              "operator": "+",
+              "left": {
+                "type": "Identifier",
+                "name": "a"
+              },
+              "right": {
+                "type": "Identifier",
+                "name": "b"
+              }
             }
           }
         ]
@@ -36,79 +71,11 @@
           }
         },
         {
-          "type": "IFStatement",
-          "condition": {
-            "type": "RelationalExpression",
-            "operator": "==",
-            "left": {
-              "type": "Identifier",
-              "name": "x"
-            },
-            "right": {
-              "type": "Literal",
-              "value": "10"
-            }
-          },
+          "type": "printStatement",
           "body": {
-            "type": "Block",
-            "commands": [
-              {
-                "type": "printStatement",
-                "body": {
-                  "type": "Identifier",
-                  "name": "x"
-                }
-              }
-            ]
-          },
-          "elseBranch": {
-            "type": "Block",
-            "commands": [
-              {
-                "type": "printStatement",
-                "body": {
-                  "type": "Literal",
-                  "value": "0"
-                }
-              }
-            ]
+            "type": "Identifier",
+            "name": "x"
           }
-        },
-        {
-          "type": "IFStatement",
-          "condition": {
-            "type": "RelationalExpression",
-            "operator": "==",
-            "left": {
-              "type": "Identifier",
-              "name": "x"
-            },
-            "right": {
-              "type": "Literal",
-              "value": "10"
-            }
-          },
-          "body": {
-            "type": "Block",
-            "commands": [
-              {
-                "type": "printStatement",
-                "body": {
-                  "type": "ArithmeticExpression",
-                  "operator": "+",
-                  "left": {
-                    "type": "Identifier",
-                    "name": "x"
-                  },
-                  "right": {
-                    "type": "Literal",
-                    "value": "2"
-                  }
-                }
-              }
-            ]
-          },
-          "elseBranch": null
         }
       ]
     }

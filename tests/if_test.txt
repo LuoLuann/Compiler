@@ -16,3 +16,15 @@ function main {
     }
 }
 
+if (x > 5) {
+    print(x);
+}
+
+-> ifStatement()
+    -> expression()
+    <- return from expression()
+    -> block()
+        -> command()
+        <- return from command()
+    <- return from block()
+<- return from ifStatement()
