@@ -118,11 +118,15 @@ class Parser {
         switch (token.type) {
             case "VARIABLE":
                 return this.variableDeclaration();
+            case "CONST":
+                return this.constantDeclaration();
             case "IDENTIFIER":
                 if (this.lookAhead().type === "ASSIGN") {
                     return this.assignment();
                 } else if (this.lookAhead().type === "LPAREN") {
-                    return this.functionDeclaration();
+                    return this.functionCall();
+                } else {
+                    throw new SyntaxError(`Unexpected token after IDENTIFIER: ${this.lookAhead().type} on line ${this.currentToken().line}`);
                 }
                 break;
             case "IF":
@@ -132,11 +136,15 @@ class Parser {
             case "PRINT":
                 return this.printStatement();
             case "BREAK":
+                return this.breakStatement();
             case "CONTINUE":
+                return this.continueStatement();
             case "RETURN":
                 return this.returnStatement();
             case "FUNCTION":
                 return this.functionDeclaration();
+            case "FOR":
+                return this.forLoop();
             default:
                 throw new SyntaxError(
                     `Invalid command: Token unexpected type: ${token.type} value: (${token.value}) on line ${token.line}`
@@ -225,10 +233,13 @@ class Parser {
 
         if (this.currentToken().type === "ASSIGN") {
             this.match("ASSIGN")
-            value = this.expression()
+            if (this.currentToken().type === "IDENTIFIER" && this.lookAhead().type === "LPAREN") {
+                value = this.functionCall()
+            } else {
+                value = this.expression()
+                this.match("SEMICOLON")
+            }
         }
-
-        this.match("SEMICOLON")
 
         return {
             type: "variableDeclaration",
@@ -437,6 +448,181 @@ class Parser {
             body: value
         }
     }
+
+    whileLoop() {
+        this.match("WHILE")
+
+        this.match("LPAREN")
+
+        const condition = this.expression()
+
+        this.match("RPAREN")
+
+        const body = this.block()
+
+        return {
+            type: "WhileLoop",
+            condition,
+            body
+        }
+    }
+
+    assignment() {
+        const id = this.match("IDENTIFIER").value
+
+        this.match("ASSIGN")
+
+        const value = this.expression()
+
+        this.match("SEMICOLON")
+
+        return {
+            type: "Assignment",
+            id,
+            value
+        }
+    }
+
+    updateExpression() {
+        /**
+         * Lida com:
+         * - Atribuição: i = i + 1
+         * - Incremento: i++ ou ++i
+         * - Decremento: i-- ou --i
+         * 
+         * Retorna um nó AST correspondente.
+         */
+    
+        const token = this.currentToken();
+    
+        // Handle prefix update operators (e.g., ++i, --i)
+        if (["PLUS_PLUS", "MINUS_MINUS"].includes(token.type)) {
+            const operator = this.match(token.type).value;
+            const argument = this.match("IDENTIFIER").value;
+    
+            return {
+                type: "UpdateExpression",
+                operator: operator,
+                argument: { type: "Identifier", name: argument },
+                prefix: true
+            };
+        }
+    
+        // Handle postfix update operators (e.g., i++, i--)
+        if (token.type === "IDENTIFIER" && ["PLUS_PLUS", "MINUS_MINUS"].includes(this.lookAhead(1)?.type)) {
+            const argument = this.match("IDENTIFIER").value;
+            const operator = this.match(this.lookAhead(1).type).value;
+    
+            return {
+                type: "UpdateExpression",
+                operator: operator,
+                argument: { type: "Identifier", name: argument },
+                prefix: false
+            };
+        }
+    
+        // Handle assignment expressions (e.g., i = i + 1)
+        if (token.type === "IDENTIFIER" && this.lookAhead(1)?.type === "ASSIGN") {
+            const left = this.match("IDENTIFIER").value;
+            this.match("ASSIGN");
+            const right = this.arithmeticExpression(); // Assegure-se que arithmeticExpression() consome todos os tokens necessários
+    
+            return {
+                type: "AssignmentExpression",
+                operator: "=",
+                left: { type: "Identifier", name: left },
+                right: right
+            };
+        }
+    
+        throw new SyntaxError(`Unexpected token in updateExpression: ${token.type} on line ${token.line}`);
+    }    
+
+    forLoop() {
+
+        this.match("FOR")
+
+        this.match("LPAREN")
+
+        this.match("VARIABLE")
+
+        const id = this.match("IDENTIFIER").value
+
+        this.match("COLON")
+
+        const type = this.match("TYPE").value
+        let value = null
+
+        if (this.currentToken().type === "ASSIGN") {
+            this.match("ASSIGN")
+            value = this.expression()
+        }
+
+        this.match("SEMICOLON")
+
+        const condition = this.expression()
+
+        this.match("SEMICOLON")
+
+        const increment = this.updateExpression()
+
+        this.match("RPAREN")
+
+        const body = this.block()
+
+        return {
+            type: "ForLoop",
+            id,
+            varType: type,
+            value,
+            condition,
+            increment,
+            body
+        } 
+    }
+
+    breakStatement() {
+        this.match("BREAK")
+        this.match("SEMICOLON")
+
+        return {
+            type: "BreakStatement"
+        }
+    }
+
+    continueStatement() {
+        this.match("CONTINUE")
+        this.match("SEMICOLON")
+
+        return {
+            type: "ContinueStatement"
+        }
+    }
+
+    functionCall() {
+        const functionName = this.match("IDENTIFIER").value; // Consome o IDENTIFIER
+        this.match("LPAREN"); // Consome o LPAREN
+    
+        const args = [];
+        if (this.currentToken().type !== "RPAREN") {
+            args.push(this.expression()); // Parse da primeira expressão
+            while (this.currentToken().type === "COMMA") {
+                this.match("COMMA"); // Consome a vírgula
+                args.push(this.expression()); // Parse das expressões seguintes
+            }
+        }
+    
+        this.match("RPAREN"); // Consome o RPAREN
+
+        this.match("SEMICOLON"); // Consome o SEMICOLON
+    
+        return {
+            type: "CallExpression",
+            callee: { type: "Identifier", name: functionName },
+            arguments: args
+        };
+    }
+    
 }
 
 module.exports = Parser;
