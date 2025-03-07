@@ -27,12 +27,12 @@ class SymbolTable {
     }
 
     update(identifier, properties) {
-        for (let i = this.scopes.length - 1; i>= 0; i--) {
+        for (let i = this.scopes.length - 1; i >= 0; i--) {
             if (this.scopes[i].has(identifier)) {
-                this.scopes[i].set(identifier, {...this.scopes[i].get(identifier), ...properties })
+                this.scopes[i].set(identifier, { ...this.scopes[i].get(identifier), ...properties });
+                return;
             }
         }
-
         throw new Error(`Symbol ${identifier} is not defined`);
     }
 
@@ -66,16 +66,16 @@ class SymbolTable {
     }
 
     printCurrentScope() {
-        console.log("Current scope: ", this.currentScope())
+        console.log("Current scope: ", JSON.stringify([...this.currentScope().entries()], null, 2));
     }
-
+    
     printAllScopes() {
-        console.log("All scopes: ")
-        for (let i = 0; i < this.scopes.length; i++) {
-            console.log(`Scope ${i}: `, this.scopes[i])
-        }
-
+        console.log("All scopes: ");
+        this.scopes.forEach((scope, index) => {
+            console.log(`Scope ${index}: `, JSON.stringify([...scope.entries()], null, 2));
+        });
     }
+    
 }
 
 module.exports = SymbolTable;
