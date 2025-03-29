@@ -12,9 +12,9 @@ module.exports = [
     { regex: /^\bfunction\b/, type: "FUNCTION" },
     { regex: /^\bprint\b/, type: "PRINT" },
     { regex: /^\bmain\b/, type: "MAIN" },
-    { regex: /^\binteger\b|^\bboolean\b/, type: "TYPE" },
+    { regex: /^\b(boolean|number)\b/, type: "TYPE" },
 
-    { regex: /^\true\b|\false\b/, type: "BOOLEAN" },
+    { regex: /^\b(true|false)\b/, type: "BOOLEAN" },
 
     { regex: /^[a-zA-Z_][a-zA-Z0-9_]*/, type: "IDENTIFIER" },
     
