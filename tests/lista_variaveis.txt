@@ -1,0 +1,12 @@
+function soma(a: number, b: number): number {
+    var ifi: number = a + b;
+    return ifi;
+}
+
+function main {
+  var x: number = 10;
+  x = 14;
+  var y: number = 5;
+
+  x = soma(x, y);
+}

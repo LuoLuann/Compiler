@@ -1,7 +1,8 @@
 const Lexer = require('./lexer/lexer');
 const readline = require('readline');
-const Parser = require('./parser/parser')
-const fs = require("fs")
+const Parser = require('./parser/parser');
+const SemanticAnalyzer = require('./semantic/semantic');
+const fs = require("fs");
 
 const r1 = readline.createInterface({
     input: process.stdin,
@@ -27,47 +28,33 @@ r1.question("Digite o número do arquivo que deseja processar: ", (choice) => {
 
         const filepath = `${dirPath}/${files[index - 1]}`;
 
-        // Lê o conteúdo do arquivo selecionado
         const input = fs.readFileSync(filepath, "utf8");
         const lexer = new Lexer(input);
         lexer.tokenize();
 
         let tokens = lexer.tokensList;
         const parser = new Parser(tokens);
-
         const ast = parser.parse();
 
-        const astJson = JSON.stringify(ast, null, 2);
+        // console.log("\nAST gerada:");
+        // console.log(JSON.stringify(ast, null, 2));
 
-        // Salva os tokens no arquivo de saída
-        const tokensJson = JSON.stringify(lexer.tokensList, null, 2);
-        fs.writeFileSync(`output_2.txt`, tokensJson);
+        console.log("\nExecutando análise semântica...");
+        const semanticAnalyzer = new SemanticAnalyzer(ast);
+        semanticAnalyzer.analyze();
 
-        fs.writeFileSync(`output_ast.txt`, astJson);
-        console.log("AST salva em output_ast.txt");
+        console.log("\n✅ Análise semântica concluída com sucesso!");
 
-        console.log("\nTabela de Símbolos:");
-        parser.symbolTable.printAllScopes(); // Imprime todos os escopos da tabela de símbolos
+        fs.writeFileSync(`output_tokens.json`, JSON.stringify(lexer.tokensList, null, 2));
+        fs.writeFileSync(`output_ast.json`, JSON.stringify(ast, null, 2));
 
-        // Exibe a saída do parser (AST)
-        console.log("\nAST gerada:");
-        console.log(astJson);
+        console.log("AST salva em output_ast.json");
+        console.log("Tokens salvos em output_tokens.json");
+
     } catch (error) {
-        console.log("Erro ao processar o arquivo.");
-        console.log(error);
+        console.log("❌ Erro ao processar o arquivo.");
+        console.error(error.message);
     } finally {
         r1.close();
     }
 });
-// const code = `
-//     var = 10;
-//     if (x > 3) {
-//         print(x);
-//     }
-// `
-
-// const lexer = new Lexer(code)
-
-// lexer.tokenize();
-
-// console.log(lexer.tokensList)

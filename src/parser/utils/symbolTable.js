@@ -75,7 +75,9 @@ class SymbolTable {
             console.log(`Scope ${index}: `, JSON.stringify([...scope.entries()], null, 2));
         });
     }
-    
+    existsInGlobalScope(id) {
+        return this.scopes[0].has(id)
+    }
 }
 
 module.exports = SymbolTable;
