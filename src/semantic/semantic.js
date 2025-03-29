@@ -1,11 +1,10 @@
 // semanticAnalyzer.js
-const SymbolTable = require('./utils/symbolTable');
+const SymbolTable = require('../parser/utils/symbolTable');
 
 class SemanticAnalyzer {
   constructor(ast) {
     this.ast = ast;
     this.symbolTable = new SymbolTable();
-    // Utilizado para verificar o tipo de retorno em funções
     this.currentReturnType = null;
   }
 
@@ -14,11 +13,10 @@ class SemanticAnalyzer {
   }
 
   visitProgram(node) {
-    // Processa as declarações globais
     node.globalDeclarations.forEach(decl => {
       this.visitDeclaration(decl);
     });
-    // Processa a função main
+
     this.visitMainFunction(node.main);
   }
 
@@ -37,11 +35,10 @@ class SemanticAnalyzer {
   }
 
   visitMainFunction(mainFunc) {
-    // Considere a main como uma função sem parâmetros e sem tipo de retorno (ou com regras específicas)
+
+
     this.symbolTable.add(mainFunc.name, { type: null, params: [], constant: false });
     this.symbolTable.enterScope();
-    // Se precisar adicionar parâmetros da main, faça aqui.
-    // Define o contexto de retorno, se necessário.
     let previousReturnType = this.currentReturnType;
     this.currentReturnType = null;
     this.visitBlock(mainFunc.body);
@@ -52,7 +49,11 @@ class SemanticAnalyzer {
   visitConstantDeclaration(decl) {
     // decl.id, decl.varType, decl.value
     if (this.symbolTable.existsInCurrentScope(decl.id)) {
-      throw new Error(`Constante ${decl.id} já declarada neste escopo.`);
+      this.logError(`Constante "${decl.id}" já declarada no escopo atual`, this.currentToken());
+      throw new Error(`Erro Semântico: Constante "${decl.id}" já declarada no escopo atual.`);
+    } else if (this.symbolTable.existsInGlobalScope(decl.id)) {
+      this.logError(`Constante "${decl.id}" já declarada`, this.currentToken());
+      throw new Error(`Erro Semântico: Constante "${decl.id}" já declarada.`);
     }
     // Verifica o tipo da expressão atribuída à constante
     const exprType = this.evaluateExpressionType(decl.value);
@@ -61,7 +62,8 @@ class SemanticAnalyzer {
         `Tipo incompatível na declaração da constante ${decl.id}: esperado ${decl.varType}, mas encontrado ${exprType}.`
       );
     }
-    this.symbolTable.add(decl.id, { type: decl.varType, constant: true });
+    this.symbolTable.add(decl.id,
+      { type: decl.varType, constant: true });
   }
 
   visitFunctionOrProcedureDeclaration(decl) {
@@ -70,7 +72,7 @@ class SemanticAnalyzer {
       throw new Error(`Função/procedimento ${decl.id} já declarado neste escopo.`);
     }
     this.symbolTable.add(decl.id, { type: decl.returnType, params: decl.params, constant: false });
-    
+
     this.symbolTable.enterScope();
     // Adiciona os parâmetros à tabela de símbolos
     decl.params.forEach(param => {
@@ -79,13 +81,13 @@ class SemanticAnalyzer {
       }
       this.symbolTable.add(param.id, { type: param.type, constant: false });
     });
-    
+
     // Define o contexto para verificação de retorno
     let previousReturnType = this.currentReturnType;
     this.currentReturnType = decl.returnType;
-    
+
     this.visitBlock(decl.body);
-    
+
     this.currentReturnType = previousReturnType;
     this.symbolTable.exitScope();
   }
@@ -103,6 +105,9 @@ class SemanticAnalyzer {
     switch (cmd.type) {
       case "variableDeclaration":
         this.visitVariableDeclaration(cmd);
+        break;
+      case "ConstantDeclaration":
+        this.visitConstantDeclaration(cmd);
         break;
       case "Assignment":
         this.visitAssignment(cmd);
@@ -122,7 +127,6 @@ class SemanticAnalyzer {
       case "ReturnStatement":
         this.visitReturnStatement(cmd);
         break;
-      // Você pode expandir para outros tipos de comando (como chamada de função, break, continue, etc.)
       default:
         throw new Error(`Comando não suportado: ${cmd.type}`);
     }
@@ -130,12 +134,17 @@ class SemanticAnalyzer {
 
   visitVariableDeclaration(decl) {
     // decl.id, decl.varType, decl.value (opcional)
+    console.log("decl: ", decl)
     if (this.symbolTable.existsInCurrentScope(decl.id)) {
-      throw new Error(`Variável ${decl.id} já declarada neste escopo.`);
+      this.logError(`Constante "${decl.id}" já declarada no escopo atual`, this.currentToken());
+      throw new Error(`Erro Semântico: Constante "${decl.id}" já declarada no escopo atual.`);
     }
+
     let exprType = null;
     if (decl.value) {
+      console.log("entrou")
       exprType = this.evaluateExpressionType(decl.value);
+      console.log("exprType: ", exprType)
       if (exprType !== decl.varType) {
         throw new Error(
           `Tipo incompatível na declaração da variável ${decl.id}: esperado ${decl.varType}, mas encontrado ${exprType}.`
@@ -147,7 +156,11 @@ class SemanticAnalyzer {
 
   visitAssignment(assign) {
     // assign.id, assign.value
-    let symbol;
+    let symbol = null;
+
+    console.log("assign: ", assign)
+
+
     try {
       symbol = this.symbolTable.get(assign.id);
     } catch (err) {
@@ -157,11 +170,15 @@ class SemanticAnalyzer {
       throw new Error(`Atribuição inválida: ${assign.id} é uma constante.`);
     }
     const exprType = this.evaluateExpressionType(assign.value);
+
     if (exprType !== symbol.type) {
       throw new Error(
         `Tipo incompatível na atribuição para ${assign.id}: esperado ${symbol.type}, mas encontrado ${exprType}.`
       );
     }
+
+    this.symbolTable.update(assign.id, { value: assign.value });
+
   }
 
   visitPrintStatement(printStmt) {
@@ -207,7 +224,6 @@ class SemanticAnalyzer {
   }
 
   visitReturnStatement(retStmt) {
-    // Se a função espera um tipo de retorno, verifique se a expressão retornada é compatível.
     if (this.currentReturnType === null && retStmt.expression) {
       throw new Error("Procedimentos não podem retornar valor.");
     }
@@ -229,7 +245,7 @@ class SemanticAnalyzer {
     switch (expr.type) {
       case "Literal":
         if (/^\d+$/.test(expr.value)) {
-          return "integer";
+          return "number";
         }
         if (expr.value === "true" || expr.value === "false") {
           return "boolean";
@@ -241,10 +257,10 @@ class SemanticAnalyzer {
       case "ArithmeticExpression": {
         const leftType = this.evaluateExpressionType(expr.left);
         const rightType = this.evaluateExpressionType(expr.right);
-        if (leftType !== "integer" || rightType !== "integer") {
+        if (leftType !== "number" || rightType !== "number") {
           throw new Error("Operação aritmética com tipos não inteiros.");
         }
-        return "integer";
+        return "number";
       }
       case "RelationalExpression": {
         const leftType = this.evaluateExpressionType(expr.left);
