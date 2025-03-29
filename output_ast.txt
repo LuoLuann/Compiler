@@ -2,17 +2,327 @@
   "type": "Program",
   "globalDeclarations": [
     {
-      "type": "ConstantDeclaration",
-      "id": "pi",
-      "varType": "integer",
-      "value": {
-        "type": "Literal",
-        "value": "3"
+      "type": "ProcedureDeclaration",
+      "id": "whileTest",
+      "params": [
+        {
+          "id": "n",
+          "type": "integer"
+        }
+      ],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "WhileLoop",
+            "condition": {
+              "type": "RelationalExpression",
+              "operator": "!=",
+              "left": {
+                "type": "Identifier",
+                "name": "n"
+              },
+              "right": {
+                "type": "Literal",
+                "value": "0"
+              }
+            },
+            "body": {
+              "type": "Block",
+              "commands": [
+                {
+                  "type": "printStatement",
+                  "body": {
+                    "type": "Identifier",
+                    "name": "n"
+                  }
+                },
+                {
+                  "type": "Assignment",
+                  "id": "n",
+                  "value": {
+                    "type": "ArithmeticExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "ArithmeticExpression",
+                      "operator": "-",
+                      "left": {
+                        "type": "Identifier",
+                        "name": "n"
+                      },
+                      "right": {
+                        "type": "ArithmeticExpression",
+                        "operator": "*",
+                        "left": {
+                          "type": "ArithmeticExpression",
+                          "operator": "/",
+                          "left": {
+                            "type": "Literal",
+                            "value": "1"
+                          },
+                          "right": {
+                            "type": "Identifier",
+                            "name": "n"
+                          }
+                        },
+                        "right": {
+                          "type": "Literal",
+                          "value": "1"
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "value": "2"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "ReturnStatement",
+            "expression": {
+              "type": "Identifier",
+              "name": "x"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "procedureTest",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "printStatement",
+            "body": {
+              "type": "Literal",
+              "value": "10"
+            }
+          }
+        ]
       }
     },
     {
       "type": "FunctionDeclaration",
-      "id": "soma",
+      "id": "funcaoTest",
+      "params": [
+        {
+          "id": "a",
+          "type": "integer"
+        },
+        {
+          "id": "b",
+          "type": "boolean"
+        }
+      ],
+      "returnType": "integer",
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "printStatement",
+            "body": {
+              "type": "Literal",
+              "value": "10"
+            }
+          },
+          {
+            "type": "ReturnStatement",
+            "expression": {
+              "type": "Literal",
+              "value": "2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "forTest",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "ForLoop",
+            "id": "i",
+            "varType": "integer",
+            "value": {
+              "type": "Literal",
+              "value": "0"
+            },
+            "condition": {
+              "type": "RelationalExpression",
+              "operator": "!=",
+              "left": {
+                "type": "Identifier",
+                "name": "i"
+              },
+              "right": {
+                "type": "Literal",
+                "value": "10"
+              }
+            },
+            "increment": {
+              "type": "AssignmentExpression",
+              "operator": "=",
+              "left": {
+                "type": "Identifier",
+                "name": "i"
+              },
+              "right": {
+                "type": "ArithmeticExpression",
+                "operator": "+",
+                "left": {
+                  "type": "Identifier",
+                  "name": "i"
+                },
+                "right": {
+                  "type": "Literal",
+                  "value": "1"
+                }
+              }
+            },
+            "body": {
+              "type": "Block",
+              "commands": [
+                {
+                  "type": "printStatement",
+                  "body": {
+                    "type": "ArithmeticExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "i"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "value": "2"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "constTest",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "ConstantDeclaration",
+            "id": "PI",
+            "varType": "integer",
+            "value": {
+              "type": "Literal",
+              "value": "3"
+            }
+          },
+          {
+            "type": "printStatement",
+            "body": {
+              "type": "Identifier",
+              "name": "PI"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "conditionalTest",
+      "params": [
+        {
+          "id": "x",
+          "type": "integer"
+        },
+        {
+          "id": "y",
+          "type": "integer"
+        }
+      ],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "IFStatement",
+            "condition": {
+              "type": "RelationalExpression",
+              "operator": ">",
+              "left": {
+                "type": "Identifier",
+                "name": "x"
+              },
+              "right": {
+                "type": "Identifier",
+                "name": "y"
+              }
+            },
+            "body": {
+              "type": "Block",
+              "commands": [
+                {
+                  "type": "printStatement",
+                  "body": {
+                    "type": "Identifier",
+                    "name": "x"
+                  }
+                },
+                {
+                  "type": "BreakStatement"
+                }
+              ]
+            },
+            "elseBranch": {
+              "type": "IFStatement",
+              "condition": {
+                "type": "RelationalExpression",
+                "operator": "==",
+                "left": {
+                  "type": "Identifier",
+                  "name": "x"
+                },
+                "right": {
+                  "type": "Identifier",
+                  "name": "y"
+                }
+              },
+              "body": {
+                "type": "Block",
+                "commands": [
+                  {
+                    "type": "printStatement",
+                    "body": {
+                      "type": "Literal",
+                      "value": "0"
+                    }
+                  }
+                ]
+              },
+              "elseBranch": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "FunctionDeclaration",
+      "id": "sum",
       "params": [
         {
           "id": "a",
@@ -28,15 +338,6 @@
         "type": "Block",
         "commands": [
           {
-            "type": "variableDeclaration",
-            "id": "ifi",
-            "varType": "integer",
-            "value": {
-              "type": "Literal",
-              "value": "1"
-            }
-          },
-          {
             "type": "ReturnStatement",
             "expression": {
               "type": "ArithmeticExpression",
@@ -49,6 +350,803 @@
                 "type": "Identifier",
                 "name": "b"
               }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "callFunctionTest",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "variableDeclaration",
+            "id": "result",
+            "varType": "integer",
+            "value": {
+              "type": "CallExpression",
+              "callee": {
+                "type": "Identifier",
+                "name": "sum"
+              },
+              "arguments": [
+                {
+                  "type": "Literal",
+                  "value": "10"
+                },
+                {
+                  "type": "Literal",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          {
+            "type": "printStatement",
+            "body": {
+              "type": "Identifier",
+              "name": "result"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "loopControlTest",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "ForLoop",
+            "id": "i",
+            "varType": "integer",
+            "value": {
+              "type": "Literal",
+              "value": "0"
+            },
+            "condition": {
+              "type": "RelationalExpression",
+              "operator": "<",
+              "left": {
+                "type": "Identifier",
+                "name": "i"
+              },
+              "right": {
+                "type": "Literal",
+                "value": "10"
+              }
+            },
+            "increment": {
+              "type": "AssignmentExpression",
+              "operator": "=",
+              "left": {
+                "type": "Identifier",
+                "name": "i"
+              },
+              "right": {
+                "type": "ArithmeticExpression",
+                "operator": "+",
+                "left": {
+                  "type": "Identifier",
+                  "name": "i"
+                },
+                "right": {
+                  "type": "Literal",
+                  "value": "1"
+                }
+              }
+            },
+            "body": {
+              "type": "Block",
+              "commands": [
+                {
+                  "type": "IFStatement",
+                  "condition": {
+                    "type": "RelationalExpression",
+                    "operator": "==",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "i"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "value": "5"
+                    }
+                  },
+                  "body": {
+                    "type": "Block",
+                    "commands": [
+                      {
+                        "type": "BreakStatement"
+                      }
+                    ]
+                  },
+                  "elseBranch": null
+                },
+                {
+                  "type": "IFStatement",
+                  "condition": {
+                    "type": "RelationalExpression",
+                    "operator": "==",
+                    "left": {
+                      "type": "ArithmeticExpression",
+                      "operator": "/",
+                      "left": {
+                        "type": "Identifier",
+                        "name": "i"
+                      },
+                      "right": {
+                        "type": "Literal",
+                        "value": "2"
+                      }
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "value": "0"
+                    }
+                  },
+                  "body": {
+                    "type": "Block",
+                    "commands": [
+                      {
+                        "type": "ContinueStatement"
+                      }
+                    ]
+                  },
+                  "elseBranch": null
+                },
+                {
+                  "type": "printStatement",
+                  "body": {
+                    "type": "Identifier",
+                    "name": "i"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "variableDeclaration",
+            "id": "j",
+            "varType": "integer",
+            "value": {
+              "type": "Literal",
+              "value": "0"
+            }
+          },
+          {
+            "type": "WhileLoop",
+            "condition": {
+              "type": "RelationalExpression",
+              "operator": "<",
+              "left": {
+                "type": "Identifier",
+                "name": "j"
+              },
+              "right": {
+                "type": "Literal",
+                "value": "5"
+              }
+            },
+            "body": {
+              "type": "Block",
+              "commands": [
+                {
+                  "type": "Assignment",
+                  "id": "j",
+                  "value": {
+                    "type": "ArithmeticExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "j"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "value": "1"
+                    }
+                  }
+                },
+                {
+                  "type": "IFStatement",
+                  "condition": {
+                    "type": "RelationalExpression",
+                    "operator": "==",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "j"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "value": "3"
+                    }
+                  },
+                  "body": {
+                    "type": "Block",
+                    "commands": [
+                      {
+                        "type": "ContinueStatement"
+                      }
+                    ]
+                  },
+                  "elseBranch": null
+                },
+                {
+                  "type": "printStatement",
+                  "body": {
+                    "type": "Identifier",
+                    "name": "j"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "nestedLoopsTest",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "ForLoop",
+            "id": "i",
+            "varType": "integer",
+            "value": {
+              "type": "Literal",
+              "value": "0"
+            },
+            "condition": {
+              "type": "RelationalExpression",
+              "operator": "<",
+              "left": {
+                "type": "Identifier",
+                "name": "i"
+              },
+              "right": {
+                "type": "Literal",
+                "value": "3"
+              }
+            },
+            "increment": {
+              "type": "AssignmentExpression",
+              "operator": "=",
+              "left": {
+                "type": "Identifier",
+                "name": "i"
+              },
+              "right": {
+                "type": "ArithmeticExpression",
+                "operator": "+",
+                "left": {
+                  "type": "Identifier",
+                  "name": "i"
+                },
+                "right": {
+                  "type": "Literal",
+                  "value": "1"
+                }
+              }
+            },
+            "body": {
+              "type": "Block",
+              "commands": [
+                {
+                  "type": "WhileLoop",
+                  "condition": {
+                    "type": "RelationalExpression",
+                    "operator": "<",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "i"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "value": "2"
+                    }
+                  },
+                  "body": {
+                    "type": "Block",
+                    "commands": [
+                      {
+                        "type": "printStatement",
+                        "body": {
+                          "type": "Identifier",
+                          "name": "i"
+                        }
+                      },
+                      {
+                        "type": "BreakStatement"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "FunctionDeclaration",
+      "id": "greet",
+      "params": [],
+      "returnType": "integer",
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "printStatement",
+            "body": {
+              "type": "Literal",
+              "value": "100"
+            }
+          },
+          {
+            "type": "ReturnStatement",
+            "expression": {
+              "type": "Literal",
+              "value": "200"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "callGreet",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "variableDeclaration",
+            "id": "val",
+            "varType": "integer",
+            "value": {
+              "type": "CallExpression",
+              "callee": {
+                "type": "Identifier",
+                "name": "greet"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "type": "printStatement",
+            "body": {
+              "type": "Identifier",
+              "name": "val"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "complexArithmeticTest",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "variableDeclaration",
+            "id": "result",
+            "varType": "integer",
+            "value": {
+              "type": "ArithmeticExpression",
+              "operator": "-",
+              "left": {
+                "type": "ArithmeticExpression",
+                "operator": "*",
+                "left": {
+                  "type": "ArithmeticExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "Literal",
+                    "value": "2"
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "value": "3"
+                  }
+                },
+                "right": {
+                  "type": "Literal",
+                  "value": "4"
+                }
+              },
+              "right": {
+                "type": "ArithmeticExpression",
+                "operator": "/",
+                "left": {
+                  "type": "Literal",
+                  "value": "5"
+                },
+                "right": {
+                  "type": "ArithmeticExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "Literal",
+                    "value": "1"
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "value": "1"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "printStatement",
+            "body": {
+              "type": "Identifier",
+              "name": "result"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "FunctionDeclaration",
+      "id": "multiply",
+      "params": [
+        {
+          "id": "a",
+          "type": "integer"
+        },
+        {
+          "id": "b",
+          "type": "integer"
+        }
+      ],
+      "returnType": "integer",
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "ReturnStatement",
+            "expression": {
+              "type": "ArithmeticExpression",
+              "operator": "*",
+              "left": {
+                "type": "Identifier",
+                "name": "a"
+              },
+              "right": {
+                "type": "Identifier",
+                "name": "b"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "outerFunction",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "variableDeclaration",
+            "id": "product",
+            "varType": "integer",
+            "value": {
+              "type": "CallExpression",
+              "callee": {
+                "type": "Identifier",
+                "name": "multiply"
+              },
+              "arguments": [
+                {
+                  "type": "Literal",
+                  "value": "6"
+                },
+                {
+                  "type": "Literal",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          {
+            "type": "printStatement",
+            "body": {
+              "type": "Identifier",
+              "name": "product"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "FunctionDeclaration",
+      "id": "calculateArea",
+      "params": [
+        {
+          "id": "width",
+          "type": "integer"
+        },
+        {
+          "id": "height",
+          "type": "integer"
+        }
+      ],
+      "returnType": "integer",
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "ReturnStatement",
+            "expression": {
+              "type": "ArithmeticExpression",
+              "operator": "*",
+              "left": {
+                "type": "Identifier",
+                "name": "width"
+              },
+              "right": {
+                "type": "Identifier",
+                "name": "height"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "areaTest",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "variableDeclaration",
+            "id": "w",
+            "varType": "integer",
+            "value": {
+              "type": "Literal",
+              "value": "5"
+            }
+          },
+          {
+            "type": "variableDeclaration",
+            "id": "h",
+            "varType": "integer",
+            "value": {
+              "type": "Literal",
+              "value": "10"
+            }
+          },
+          {
+            "type": "variableDeclaration",
+            "id": "area",
+            "varType": "integer",
+            "value": {
+              "type": "CallExpression",
+              "callee": {
+                "type": "Identifier",
+                "name": "calculateArea"
+              },
+              "arguments": [
+                {
+                  "type": "ArithmeticExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "Identifier",
+                    "name": "w"
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "value": "2"
+                  }
+                },
+                {
+                  "type": "ArithmeticExpression",
+                  "operator": "-",
+                  "left": {
+                    "type": "Identifier",
+                    "name": "h"
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "value": "3"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "printStatement",
+            "body": {
+              "type": "Identifier",
+              "name": "area"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "mixedExpressionTest",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "variableDeclaration",
+            "id": "a",
+            "varType": "integer",
+            "value": {
+              "type": "Literal",
+              "value": "5"
+            }
+          },
+          {
+            "type": "variableDeclaration",
+            "id": "b",
+            "varType": "integer",
+            "value": {
+              "type": "Literal",
+              "value": "10"
+            }
+          },
+          {
+            "type": "variableDeclaration",
+            "id": "c",
+            "varType": "integer",
+            "value": {
+              "type": "Literal",
+              "value": "15"
+            }
+          },
+          {
+            "type": "IFStatement",
+            "condition": {
+              "type": "RelationalExpression",
+              "operator": "<",
+              "left": {
+                "type": "ArithmeticExpression",
+                "operator": "+",
+                "left": {
+                  "type": "Identifier",
+                  "name": "a"
+                },
+                "right": {
+                  "type": "Identifier",
+                  "name": "b"
+                }
+              },
+              "right": {
+                "type": "ArithmeticExpression",
+                "operator": "*",
+                "left": {
+                  "type": "Identifier",
+                  "name": "c"
+                },
+                "right": {
+                  "type": "Literal",
+                  "value": "2"
+                }
+              }
+            },
+            "body": {
+              "type": "Block",
+              "commands": [
+                {
+                  "type": "printStatement",
+                  "body": {
+                    "type": "Literal",
+                    "value": "1"
+                  }
+                }
+              ]
+            },
+            "elseBranch": {
+              "type": "Block",
+              "commands": [
+                {
+                  "type": "printStatement",
+                  "body": {
+                    "type": "Literal",
+                    "value": "0"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "ProcedureDeclaration",
+      "id": "booleanFunction",
+      "params": [],
+      "returnType": null,
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "variableDeclaration",
+            "id": "x",
+            "varType": "boolean",
+            "value": {
+              "type": "Identifier",
+              "name": "true"
+            }
+          },
+          {
+            "type": "variableDeclaration",
+            "id": "y",
+            "varType": "boolean",
+            "value": {
+              "type": "Identifier",
+              "name": "false"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "FunctionDeclaration",
+      "id": "booleanFunctionWithTypeAndParams",
+      "params": [
+        {
+          "id": "x",
+          "type": "boolean"
+        },
+        {
+          "id": "y",
+          "type": "boolean"
+        }
+      ],
+      "returnType": "boolean",
+      "body": {
+        "type": "Block",
+        "commands": [
+          {
+            "type": "variableDeclaration",
+            "id": "x",
+            "varType": "boolean",
+            "value": {
+              "type": "Identifier",
+              "name": "true"
+            }
+          },
+          {
+            "type": "variableDeclaration",
+            "id": "y",
+            "varType": "boolean",
+            "value": {
+              "type": "Identifier",
+              "name": "false"
+            }
+          },
+          {
+            "type": "ReturnStatement",
+            "expression": {
+              "type": "Identifier",
+              "name": "true"
             }
           }
         ]
@@ -67,15 +1165,115 @@
           "varType": "integer",
           "value": {
             "type": "Literal",
-            "value": "10"
+            "value": "15"
           }
         },
         {
-          "type": "printStatement",
-          "body": {
-            "type": "Identifier",
-            "name": "x"
+          "type": "variableDeclaration",
+          "id": "y",
+          "varType": "integer",
+          "value": {
+            "type": "Literal",
+            "value": "20"
           }
+        },
+        {
+          "type": "IFStatement",
+          "condition": {
+            "type": "RelationalExpression",
+            "operator": "<",
+            "left": {
+              "type": "Identifier",
+              "name": "x"
+            },
+            "right": {
+              "type": "Identifier",
+              "name": "y"
+            }
+          },
+          "body": {
+            "type": "Block",
+            "commands": [
+              {
+                "type": "printStatement",
+                "body": {
+                  "type": "ArithmeticExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "Identifier",
+                    "name": "x"
+                  },
+                  "right": {
+                    "type": "Identifier",
+                    "name": "y"
+                  }
+                }
+              }
+            ]
+          },
+          "elseBranch": {
+            "type": "IFStatement",
+            "condition": {
+              "type": "RelationalExpression",
+              "operator": "==",
+              "left": {
+                "type": "Identifier",
+                "name": "x"
+              },
+              "right": {
+                "type": "Identifier",
+                "name": "y"
+              }
+            },
+            "body": {
+              "type": "Block",
+              "commands": [
+                {
+                  "type": "printStatement",
+                  "body": {
+                    "type": "Literal",
+                    "value": "0"
+                  }
+                }
+              ]
+            },
+            "elseBranch": {
+              "type": "Block",
+              "commands": [
+                {
+                  "type": "printStatement",
+                  "body": {
+                    "type": "ArithmeticExpression",
+                    "operator": "-",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "x"
+                    },
+                    "right": {
+                      "type": "Identifier",
+                      "name": "y"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "CallExpression",
+          "callee": {
+            "type": "Identifier",
+            "name": "callFunctionTest"
+          },
+          "arguments": []
+        },
+        {
+          "type": "CallExpression",
+          "callee": {
+            "type": "Identifier",
+            "name": "loopControlTest"
+          },
+          "arguments": []
         }
       ]
     }

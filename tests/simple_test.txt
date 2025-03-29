@@ -1,2 +1,2 @@
-var num = 5;
+const num = 5;
 print(num);

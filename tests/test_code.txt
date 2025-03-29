@@ -1,15 +1,18 @@
 function whileTest(n: integer) {
     while(n != 0) {
         print(n);
-        n = n - 1;
+        n = n - 1 / n * 1 + 2;
+
     }
+
+    return x;
 }
 
 function procedureTest() {
     print(10);
 }
 
-function funcaoTest(): integer {
+function funcaoTest(a: integer , b: boolean): integer {
     print(10);
     return 2;
 }
@@ -28,10 +31,9 @@ function constTest() {
 function conditionalTest(x: integer, y: integer) {
     if (x > y) {
         print(x);
+        break;
     } else if (x == y) {
         print(0);
-    } else {
-        print(y);
     }
 }
 

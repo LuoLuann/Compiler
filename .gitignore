@@ -5,3 +5,9 @@ node_modules/
 # removendo o package-lock.json
 
 package-lock.json
+
+tests/
+
+output_ast.json
+output_tokens.json
+output.txt
