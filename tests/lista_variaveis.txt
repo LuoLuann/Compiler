@@ -1,12 +1,19 @@
 function soma(a: number, b: number): number {
     var ifi: number = a + b;
+    a = 15;
     return ifi;
+}
+
+function precedural(a: number): number {
+  print(a);
 }
 
 function main {
   var x: number = 10;
   x = 14;
   var y: number = 5;
+
+  const mult: number = x * y + 15 - 10;
 
   x = soma(x, y);
 }
