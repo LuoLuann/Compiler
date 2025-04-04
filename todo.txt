@@ -1,5 +1,8 @@
 Lista de correções:
-- corrigir procedure (luann)
+- corrigir procedure (luann) V
+- corrigir function (luann) V
+	nos dois casos acima foram corrigidos scopos de variaveis dentro da funcao e procedure,
+	também atribuiçãono caso de funcao e n poder atribuir procedure
 - corrigir lista de declaração de variáveis (baixa prioridade)
 - corrigir atribuição de expressão pois o valor não ta salvando a att da expressão
 	ex: const mult: number = x * y + 15 - 10; (thiago)

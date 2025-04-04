@@ -362,7 +362,7 @@ class Parser {
         //     };
         // }
         if (this.currentToken().type === "IDENTIFIER" && this.lookAhead().type === "LPAREN") {
-            return this.functionCall()
+            return this.functionCall(false)
         }
         const left = this.arithmeticExpression()
 
@@ -663,7 +663,7 @@ class Parser {
         }
     }
 
-    functionCall() {
+    functionCall(consumeSemicolon = true) {
         const functionName = this.match("IDENTIFIER").value; 
         this.match("LPAREN");
 
@@ -680,6 +680,10 @@ class Parser {
         this.trackProcessing()
 
         this.match("RPAREN");
+        if (consumeSemicolon) {
+            this.match("SEMICOLON");
+        }
+
 
         return {
             type: "CallExpression",

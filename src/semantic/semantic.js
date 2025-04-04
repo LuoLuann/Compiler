@@ -98,6 +98,8 @@ class SemanticAnalyzer {
       } else {
         throw new Error(`Função "${decl.id}" especifica o retorno ${returnType}, mas não há um valor de retorno.`);
       }
+    } else if (!decl.isFunction && decl.returnType) {
+      throw new Error(`Funções sem retorno não podem ser tipadas`);
     }
     this.symbolTable.exitScope();
   }
@@ -163,13 +165,14 @@ class SemanticAnalyzer {
   }
   visitFunctionCall(callExpr) {
     const funcSymbol = this.symbolTable.get(callExpr.callee.name)
-    console.log(callExpr)
-    console.log(funcSymbol)
     if (!funcSymbol) {
       throw new Error(`Função ${callExpr.callee.name} não declarada.`);
     }
     if (callExpr.arguments.length !== funcSymbol.params.length) {
       throw new Error(`Número de argumentos incorreto para ${callExpr.callee.name}.`);
+    }
+    if (funcSymbol.isFunction && funcSymbol.type !== null) {
+      throw new Error(`Chamada inválida: a função "${callExpr.callee.name}" deve ser utilizada em uma atribuição, pois retorna um valor.`);
     }
 
     callExpr.arguments.forEach((arg, i) => {
