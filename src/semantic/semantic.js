@@ -35,8 +35,6 @@ class SemanticAnalyzer {
   }
 
   visitMainFunction(mainFunc) {
-
-
     this.symbolTable.add(mainFunc.name, { type: null, params: [], constant: false });
     this.symbolTable.enterScope();
     let previousReturnType = this.currentReturnType;
@@ -67,38 +65,53 @@ class SemanticAnalyzer {
   }
 
   visitFunctionOrProcedureDeclaration(decl) {
-    // Para funções, decl.returnType não é nulo; para procedimentos, é nulo.
-    if (this.symbolTable.existsInCurrentScope(decl.id)) {
-      throw new Error(`Função/procedimento ${decl.id} já declarado neste escopo.`);
+    if (this.symbolTable.existsInCurrentScope(decl.id) || this.symbolTable.existsInGlobalScope(decl.id)) {
+      throw new Error(`${decl.id} já declarado.`);
     }
-    this.symbolTable.add(decl.id, { type: decl.returnType, params: decl.params, constant: false });
-
+    this.symbolTable.add(decl.id, { type: decl.returnType, params: decl.params, constant: false, isFunction: decl.isFunction });
     this.symbolTable.enterScope();
-    // Adiciona os parâmetros à tabela de símbolos
     decl.params.forEach(param => {
       if (this.symbolTable.existsInCurrentScope(param.id)) {
         throw new Error(`Parâmetro ${param.id} já declarado na função ${decl.id}.`);
       }
       this.symbolTable.add(param.id, { type: param.type, constant: false });
-    });
-
-    // Define o contexto para verificação de retorno
-    let previousReturnType = this.currentReturnType;
-    this.currentReturnType = decl.returnType;
-
+    })
+    const returnStatement = decl.body.commands.find(command => command.type === "ReturnStatement");
+    if (returnStatement) {
+      decl.body.commands = decl.body.commands.filter(command => command !== returnStatement);
+    }
     this.visitBlock(decl.body);
 
-    this.currentReturnType = previousReturnType;
+    if (decl.isFunction && decl.returnType !== null) {
+      const returnType = decl.returnType;
+
+      if (returnStatement) {
+        const returnExpressionType = this.evaluateExpressionType(returnStatement.expression);
+
+        if (returnStatement.expression === null || returnStatement.expression === undefined) {
+          throw new Error(`Função "${decl.id}" especifica o retorno ${returnType}, mas retorna null.`);
+        }
+
+        console.log("sa: ", returnExpressionType);
+
+        if (returnExpressionType !== returnType) {
+          throw new Error(`Tipo de retorno incompatível para a função "${decl.id}". Esperado: ${returnType}, mas encontrado: ${returnExpressionType}.`);
+        }
+
+      } else {
+        throw new Error(`Função "${decl.id}" especifica o retorno ${returnType}, mas não há um valor de retorno.`);
+      }
+    }
+    console.log("fim do scopo")
     this.symbolTable.exitScope();
   }
 
   visitBlock(block) {
-    // Em alguns casos, já pode ter sido aberto um novo escopo (como em funções), mas para blocos internos pode ser necessário criar um novo.
-    this.symbolTable.enterScope();
+    // this.symbolTable.enterScope();
     block.commands.forEach(cmd => {
       this.visitCommand(cmd);
     });
-    this.symbolTable.exitScope();
+    // this.symbolTable.exitScope();
   }
 
   visitCommand(cmd) {
@@ -124,8 +137,10 @@ class SemanticAnalyzer {
       case "IFStatement":
         this.visitIfStatement(cmd);
         break;
-      case "ReturnStatement":
-        this.visitReturnStatement(cmd);
+      case "CallExpression":
+        this.visitFunctionCall(cmd)
+        break;
+      case "BreakStatement":
         break;
       default:
         throw new Error(`Comando não suportado: ${cmd.type}`);
@@ -134,7 +149,6 @@ class SemanticAnalyzer {
 
   visitVariableDeclaration(decl) {
     // decl.id, decl.varType, decl.value (opcional)
-    console.log("decl: ", decl)
     if (this.symbolTable.existsInCurrentScope(decl.id)) {
       this.logError(`Constante "${decl.id}" já declarada no escopo atual`, this.currentToken());
       throw new Error(`Erro Semântico: Constante "${decl.id}" já declarada no escopo atual.`);
@@ -142,9 +156,7 @@ class SemanticAnalyzer {
 
     let exprType = null;
     if (decl.value) {
-      console.log("entrou")
       exprType = this.evaluateExpressionType(decl.value);
-      console.log("exprType: ", exprType)
       if (exprType !== decl.varType) {
         throw new Error(
           `Tipo incompatível na declaração da variável ${decl.id}: esperado ${decl.varType}, mas encontrado ${exprType}.`
@@ -152,14 +164,33 @@ class SemanticAnalyzer {
       }
     }
     this.symbolTable.add(decl.id, { type: decl.varType, constant: false });
+    console.log(`Variável "${decl.id}" adicionada ao escopo atual.`); // Log para verificação
+    console.log(this.symbolTable.currentScope())
   }
+  visitFunctionCall(callExpr) {
+    const funcSymbol = this.symbolTable.get(callExpr.callee.name)
+    if (!funcSymbol) {
+      throw new Error(`Função ${callExpr.callee.name} não declarada.`);
+    }
+    if (callExpr.arguments.length !== funcSymbol.params.length) {
+      throw new Error(`Número de argumentos incorreto para ${callExpr.callee.name}.`);
+    }
 
+    callExpr.arguments.forEach((arg, i) => {
+      const argType = this.evaluateExpressionType(arg)
+      const paramType = funcSymbol.params[i].type
+
+      if (argType !== paramType) {
+        throw new Error(
+          `Tipo incompatível no parâmetro ${i + 1} de ${callExpr.callee.name}: esperado ${paramType}, mas encontrado ${argType}.`
+        );
+      }
+      return funcSymbol.type
+    })
+  }
   visitAssignment(assign) {
     // assign.id, assign.value
     let symbol = null;
-
-    console.log("assign: ", assign)
-
 
     try {
       symbol = this.symbolTable.get(assign.id);
@@ -176,6 +207,7 @@ class SemanticAnalyzer {
         `Tipo incompatível na atribuição para ${assign.id}: esperado ${symbol.type}, mas encontrado ${exprType}.`
       );
     }
+
 
     this.symbolTable.update(assign.id, { value: assign.value });
 
@@ -223,25 +255,7 @@ class SemanticAnalyzer {
     }
   }
 
-  visitReturnStatement(retStmt) {
-    if (this.currentReturnType === null && retStmt.expression) {
-      throw new Error("Procedimentos não podem retornar valor.");
-    }
-    if (this.currentReturnType !== null) {
-      if (retStmt.expression === null) {
-        throw new Error("Função deve retornar um valor.");
-      }
-      const exprType = this.evaluateExpressionType(retStmt.expression);
-      if (exprType !== this.currentReturnType) {
-        throw new Error(
-          `Tipo de retorno incompatível: esperado ${this.currentReturnType}, mas encontrado ${exprType}.`
-        );
-      }
-    }
-  }
-
   evaluateExpressionType(expr) {
-    // Método que analisa o nó da expressão e retorna seu tipo.
     switch (expr.type) {
       case "Literal":
         if (/^\d+$/.test(expr.value)) {
@@ -271,7 +285,6 @@ class SemanticAnalyzer {
         return "boolean";
       }
       case "CallExpression": {
-        // Verifica se a função foi declarada e se os argumentos são compatíveis.
         const funcSymbol = this.symbolTable.get(expr.callee.name);
         if (!funcSymbol) {
           throw new Error(`Função ${expr.callee.name} não declarada.`);

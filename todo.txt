@@ -1,8 +1,8 @@
 Lista de correções:
-- corrigir procedure
-- corrigir lista de declaração de variáveis
+- corrigir procedure (luann)
+- corrigir lista de declaração de variáveis (baixa prioridade)
 - corrigir atribuição de expressão pois o valor não ta salvando a att da expressão
-	ex: const mult: number = x * y + 15 - 10;
+	ex: const mult: number = x * y + 15 - 10; (thiago)
 - corrigir print para exibir o valor corretamente
 - melhorar exibição do erro de scopo de variável
 - verificar for, pois não ta funcionando 
@@ -10,3 +10,5 @@ Lista de correções:
 	1. ajustar regras e condições para o loop
 	2. verificar expressão
 - ajustar break e continuo para logica de laços
+
+- fazer 3 endereços

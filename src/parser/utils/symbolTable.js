@@ -78,6 +78,10 @@ class SymbolTable {
     existsInGlobalScope(id) {
         return this.scopes[0].has(id)
     }
+
+    getByNameInGlobalScope(name) {
+        return this.scopes[0].get(name)
+    }
 }
 
 module.exports = SymbolTable;
