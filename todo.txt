@@ -1,17 +1,19 @@
 Lista de correções:
-- corrigir procedure (luann) V
-- corrigir function (luann) V
+1 - corrigir procedure (luann) V
+2- corrigir function (luann) V
 	nos dois casos acima foram corrigidos scopos de variaveis dentro da funcao e procedure,
-	também atribuiçãono caso de funcao e n poder atribuir procedure
-- corrigir lista de declaração de variáveis (baixa prioridade)
-- corrigir atribuição de expressão pois o valor não ta salvando a att da expressão
+	também atribuiçãono caso de funcao e n poder atribuir procedure 
+3 - corrigir lista de declaração de variáveis (baixa prioridade)
+4 - corrigir atribuição de expressão pois o valor não ta salvando a att da expressão
 	ex: const mult: number = x * y + 15 - 10; (thiago)
-- corrigir print para exibir o valor corretamente
-- melhorar exibição do erro de scopo de variável
-- verificar for, pois não ta funcionando 
-- corrigir while:
-	1. ajustar regras e condições para o loop
-	2. verificar expressão
-- ajustar break e continuo para logica de laços
+5 - corrigir print para exibir o valor corretamente (luann) V
+6 - melhorar exibição do erro de scopo de variável
+7 - verificar for, pois não ta funcionando 
+8 - corrigir while (luann):
+	a. ajustar regras e condições para o loop
+	b. verificar expressão 
+9 - ajustar break e ajustar continuo (luann) V 
+	agora os breaks e continues estão presos ao laços
+11 - ajustar if e else
 
 - fazer 3 endereços

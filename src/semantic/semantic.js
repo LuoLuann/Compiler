@@ -1,4 +1,3 @@
-// semanticAnalyzer.js
 const SymbolTable = require('../parser/utils/symbolTable');
 
 class SemanticAnalyzer {
@@ -6,6 +5,7 @@ class SemanticAnalyzer {
     this.ast = ast;
     this.symbolTable = new SymbolTable();
     this.currentReturnType = null;
+    this.loopDepth = 0;
   }
 
   analyze() {
@@ -45,7 +45,6 @@ class SemanticAnalyzer {
   }
 
   visitConstantDeclaration(decl) {
-    // decl.id, decl.varType, decl.value
     if (this.symbolTable.existsInCurrentScope(decl.id)) {
       this.logError(`Constante "${decl.id}" já declarada no escopo atual`, this.currentToken());
       throw new Error(`Erro Semântico: Constante "${decl.id}" já declarada no escopo atual.`);
@@ -53,7 +52,6 @@ class SemanticAnalyzer {
       this.logError(`Constante "${decl.id}" já declarada`, this.currentToken());
       throw new Error(`Erro Semântico: Constante "${decl.id}" já declarada.`);
     }
-    // Verifica o tipo da expressão atribuída à constante
     const exprType = this.evaluateExpressionType(decl.value);
     if (exprType !== decl.varType) {
       throw new Error(
@@ -139,6 +137,8 @@ class SemanticAnalyzer {
         this.visitFunctionCall(cmd)
         break;
       case "BreakStatement":
+      case "ContinueStatement":
+        this.visitBreakAndContinue(cmd)
         break;
       default:
         throw new Error(`Comando não suportado: ${cmd.type}`);
@@ -222,21 +222,29 @@ class SemanticAnalyzer {
     if (condType !== "boolean") {
       throw new Error("Condição do while deve ser do tipo boolean.");
     }
+    this.loopDepth++;
+    
+    this.symbolTable.enterScope();
     this.visitBlock(loop.body);
+    this.symbolTable.exitScope();
+
+    this.loopDepth--;
   }
 
   visitForLoop(loop) {
-    // Para o for, é necessário verificar cada parte:
-    // Inicialização (normalmente uma atribuição ou declaração)
-    // Condição: deve ser booleana
-    // Incremento: verificado conforme a lógica da linguagem
     const condType = this.evaluateExpressionType(loop.condition);
     if (condType !== "boolean") {
       throw new Error("Condição do for deve ser do tipo boolean.");
     }
-    // Verifica o incremento (por exemplo, i = i + 1)
     this.evaluateExpressionType(loop.increment);
+  
+    this.loopDepth++;
+    
+    this.symbolTable.enterScope();
     this.visitBlock(loop.body);
+    this.symbolTable.exitScope();
+    
+    this.loopDepth--;
   }
 
   visitIfStatement(ifStmt) {
@@ -254,7 +262,20 @@ class SemanticAnalyzer {
     }
   }
 
+  visitBreakAndContinue(cmd) {
+    console.log(this.loopDepth)
+    if (this.loopDepth === 0) {
+      switch (cmd.type) {
+        case "BreakStatement":
+          throw new Error("'Break' usado fora de um laço.");
+        case "ContinueStatement":
+          throw new Error("'Continue' usado fora de um laço.");
+      }
+    }
+  }
+
   evaluateExpressionType(expr) {
+    console.log(expr)
     switch (expr.type) {
       case "Literal":
         if (/^\d+$/.test(expr.value)) {
@@ -283,7 +304,6 @@ class SemanticAnalyzer {
         }
         return "boolean";
       }
-      case "":
       case "CallExpression": {
         const funcSymbol = this.symbolTable.get(expr.callee.name);
         if (!funcSymbol) {
