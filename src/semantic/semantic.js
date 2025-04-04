@@ -91,9 +91,6 @@ class SemanticAnalyzer {
         if (returnStatement.expression === null || returnStatement.expression === undefined) {
           throw new Error(`Função "${decl.id}" especifica o retorno ${returnType}, mas retorna null.`);
         }
-
-        console.log("sa: ", returnExpressionType);
-
         if (returnExpressionType !== returnType) {
           throw new Error(`Tipo de retorno incompatível para a função "${decl.id}". Esperado: ${returnType}, mas encontrado: ${returnExpressionType}.`);
         }
@@ -102,7 +99,6 @@ class SemanticAnalyzer {
         throw new Error(`Função "${decl.id}" especifica o retorno ${returnType}, mas não há um valor de retorno.`);
       }
     }
-    console.log("fim do scopo")
     this.symbolTable.exitScope();
   }
 
@@ -164,11 +160,11 @@ class SemanticAnalyzer {
       }
     }
     this.symbolTable.add(decl.id, { type: decl.varType, constant: false });
-    console.log(`Variável "${decl.id}" adicionada ao escopo atual.`); // Log para verificação
-    console.log(this.symbolTable.currentScope())
   }
   visitFunctionCall(callExpr) {
     const funcSymbol = this.symbolTable.get(callExpr.callee.name)
+    console.log(callExpr)
+    console.log(funcSymbol)
     if (!funcSymbol) {
       throw new Error(`Função ${callExpr.callee.name} não declarada.`);
     }
@@ -284,6 +280,7 @@ class SemanticAnalyzer {
         }
         return "boolean";
       }
+      case "":
       case "CallExpression": {
         const funcSymbol = this.symbolTable.get(expr.callee.name);
         if (!funcSymbol) {

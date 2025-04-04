@@ -362,11 +362,7 @@ class Parser {
         //     };
         // }
         if (this.currentToken().type === "IDENTIFIER" && this.lookAhead().type === "LPAREN") {
-            const value = this.functionCall();
-            return {
-                type: "Assignment",
-                value
-            };
+            return this.functionCall()
         }
         const left = this.arithmeticExpression()
 
@@ -668,9 +664,8 @@ class Parser {
     }
 
     functionCall() {
-        this.trackProcessing("function call")
         const functionName = this.match("IDENTIFIER").value; 
-        this.match("LPAREN"); // Consome o LPAREN
+        this.match("LPAREN");
 
         var functionInfos = this.symbolTable.getByNameInGlobalScope(functionName)
 
@@ -685,8 +680,6 @@ class Parser {
         this.trackProcessing()
 
         this.match("RPAREN");
-
-        this.match("SEMICOLON");
 
         return {
             type: "CallExpression",
