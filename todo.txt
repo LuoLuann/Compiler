@@ -9,7 +9,7 @@ Lista de correções:
 5 - corrigir print para exibir o valor corretamente (luann) V
 6 - melhorar exibição do erro de scopo de variável
 7 - verificar for, pois não ta funcionando 
-8 - corrigir while (luann):
+8 - corrigir while (luann) V
 	a. ajustar regras e condições para o loop
 	b. verificar expressão 
 9 - ajustar break e ajustar continuo (luann) V 
