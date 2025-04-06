@@ -232,20 +232,29 @@ class SemanticAnalyzer {
   }
 
   visitForLoop(loop) {
+    // Adiciona a variável do loop à tabela de símbolos
+    this.symbolTable.add(loop.id, { 
+        type: loop.varType, 
+        value: loop.value,
+        constant: false 
+    });
+
+    // Verifica a condição (i != 10)
     const condType = this.evaluateExpressionType(loop.condition);
     if (condType !== "boolean") {
-      throw new Error("Condição do for deve ser do tipo boolean.");
+        throw new Error("Condição do for deve ser do tipo boolean.");
     }
-    this.evaluateExpressionType(loop.increment);
-  
+
+    // Verifica o incremento (i = i + 1)
+    this.evaluateExpressionType(loop.increment); // ✅ Agora processa AssignmentExpression
+
+    // Processa o corpo do loop
     this.loopDepth++;
-    
     this.symbolTable.enterScope();
     this.visitBlock(loop.body);
     this.symbolTable.exitScope();
-    
     this.loopDepth--;
-  }
+}
 
   visitIfStatement(ifStmt) {
     const condType = this.evaluateExpressionType(ifStmt.condition);
@@ -323,6 +332,28 @@ class SemanticAnalyzer {
         });
         return funcSymbol.type;
       }
+      case "AssignmentExpression": {
+        const leftType = this.evaluateExpressionType(expr.left);
+        const rightType = this.evaluateExpressionType(expr.right);
+
+        // Verifica se a variável existe
+        const symbol = this.symbolTable.get(expr.left.name);
+        if (!symbol) {
+            throw new Error(`Variável '${expr.left.name}' não declarada.`);
+        }
+
+        // Valida se não é constante
+        if (symbol.constant) {
+            throw new Error(`Atribuição inválida: '${expr.left.name}' é uma constante.`);
+        }
+
+        // Valida compatibilidade de tipos
+        if (leftType !== rightType) {
+            throw new Error(`Atribuição inválida: tipo ${rightType} não é compatível com ${leftType}.`);
+        }
+
+        return leftType;
+    }
       default:
         throw new Error(`Expressão não suportada: ${expr.type}`);
     }

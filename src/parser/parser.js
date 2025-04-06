@@ -243,35 +243,28 @@ class Parser {
     }
 
     variableDeclaration() {
-        this.match("VARIABLE");
-
-        const id = this.match("IDENTIFIER").value;
-
-        this.match("COLON");
-        const type = this.match("TYPE").value;
-
-        if (type !== 'number' && type !== 'boolean') {
-            this.logError(`Tipo inválido "${type}`)
-            throw new Error(`Erro: Tipo inválido "${type}"`);
-        }
+        this.match("VARIABLE"); // Consome a palavra-chave 'var' (token VARIABLE)
+    
+        const id = this.match("IDENTIFIER").value;  // Nome da variável
+        this.match("COLON");  // Consome ':'
+        const type = this.match("TYPE").value;  // Tipo da variável
+    
         let value = null;
-
         if (this.currentToken().type === "ASSIGN") {
-            this.match("ASSIGN");
-            value = this.expression();
-            this.match("SEMICOLON");
+            this.match("ASSIGN");  // Consome '='
+            value = this.expression();  // Processa o valor da variável
         }
-
+    
+        this.match("SEMICOLON");  // Consome o ponto e vírgula no final
+    
         // Verifica se a variável já foi declarada no escopo
         if (this.symbolTable.existsInCurrentScope(id)) {
             this.logError(`Variável "${id}" já declarada no escopo atual`, this.currentToken());
             throw new Error(`Erro Semântico: Variável "${id}" já declarada no escopo atual.`);
         }
-
-        this.logInfo(`Variável "${id}" declarada com sucesso (${type})`, this.currentToken());
-
-        this.symbolTable.add(id, { type, value, constant: false, line: this.currentToken().line });
-
+    
+        this.symbolTable.add(id, { type, value, constant: false });
+    
         return {
             type: "variableDeclaration",
             id,
@@ -279,6 +272,7 @@ class Parser {
             value
         };
     }
+    
 
     functionDeclaration() {
         this.match("FUNCTION")
@@ -529,25 +523,21 @@ class Parser {
         const id = this.match("IDENTIFIER").value; // Consome o IDENTIFIER (variável)
         let value = null;
         this.match("ASSIGN");  // Consome o operador de atribuição '='
-
-        if (this.lookAhead().type === "LPAREN") {
-            value = this.functionCall();
-            return {
-                type: "Assignment",
-                id,
-                value
-            };
-        }
-
-        value = this.expression();
+    
+        // Processa a expressão e calcula o valor
+        value = this.expression(); 
+    
         this.match("SEMICOLON");
-
+    
+        // Agora, você precisa atualizar a tabela de símbolos com o valor calculado
+        this.symbolTable.update(id, { value });
+    
         return {
             type: "Assignment",
             id,
             value
         };
-    }
+    }    
 
     updateExpression() {
         /**
@@ -603,48 +593,32 @@ class Parser {
     }
 
     forLoop() {
-        this.match("FOR")
-
-        this.symbolTable.printCurrentScope()
-        this.match("LPAREN")
-
-        this.match("VARIABLE")
-
-        const id = this.match("IDENTIFIER").value
-
-        this.match("COLON")
-
-        const type = this.match("TYPE").value
-        let value = null
-
-        if (this.currentToken().type === "ASSIGN") {
-            this.match("ASSIGN")
-            value = this.expression()
-        }
-
-        this.match("SEMICOLON")
-
-        const condition = this.expression()
-
-        this.match("SEMICOLON")
-
-        const increment = this.updateExpression()
-
-        this.match("RPAREN")
-
-        const body = this.block()
-
+        this.match("FOR");
+        this.match("LPAREN");
+    
+        // Usa variableDeclaration() para processar 'var i: integer = 0'
+        const declaration = this.variableDeclaration(); 
+    
+        const condition = this.expression();
+        this.match("SEMICOLON");
+    
+        const increment = this.updateExpression();
+        this.match("RPAREN");
+    
+        const body = this.block();
+    
         return {
             type: "ForLoop",
-            id,
-            varType: type,
-            value,
+            id: declaration.id,
+            varType: declaration.varType,
+            value: declaration.value,
             condition,
             increment,
             body
-        }
+        };
     }
-
+    
+    
     breakStatement() {
         this.match("BREAK")
         this.match("SEMICOLON")
