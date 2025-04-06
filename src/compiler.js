@@ -2,6 +2,7 @@ const Lexer = require('./lexer/lexer');
 const readline = require('readline');
 const Parser = require('./parser/parser');
 const SemanticAnalyzer = require('./semantic/semantic');
+const ThreeAddressCodeGenerator = require('./threeAddressCodeGenerator/ThreeAddressCodeGenerator');
 const fs = require("fs");
 
 const r1 = readline.createInterface({
@@ -39,17 +40,22 @@ r1.question("Digite o número do arquivo que deseja processar: ", (choice) => {
         // console.log("\nAST gerada:");
         // console.log(JSON.stringify(ast, null, 2));
 
-        console.log("\nExecutando análise semântica...");
         const semanticAnalyzer = new SemanticAnalyzer(ast);
         semanticAnalyzer.analyze();
 
-        console.log("\n✅ Análise semântica concluída com sucesso!");
+        const astSemantic = semanticAnalyzer.ast;
+
+        const tacGenerator = new ThreeAddressCodeGenerator(astSemantic);
+        const tacInstructions = tacGenerator.generate();
 
         fs.writeFileSync(`output_tokens.json`, JSON.stringify(lexer.tokensList, null, 2));
         fs.writeFileSync(`output_ast.json`, JSON.stringify(ast, null, 2));
 
         console.log("AST salva em output_ast.json");
         console.log("Tokens salvos em output_tokens.json");
+
+        fs.writeFileSync(`output_tac.txt`, tacInstructions.join("\n"));
+        console.log("Código de 3 endereços salvo em output_tac.txt");
 
     } catch (error) {
         console.log("❌ Erro ao processar o arquivo.");
